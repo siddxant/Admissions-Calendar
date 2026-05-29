@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0b0c0e;
+  --s1:        #13151a;
+  --s2:        #1a1d24;
+  --s3:        #22262f;
+  --b1:        rgba(255,255,255,.06);
+  --b2:        rgba(255,255,255,.11);
+  --b3:        rgba(255,255,255,.18);
+  --text:      #e4e6eb;
+  --muted:     #636878;
+  --sans:      'DM Sans', system-ui, sans-serif;
+  --mono:      'DM Mono', monospace;
+  --r-sm:5px; --r-md:10px; --r-lg:16px;
+
+  /* event type colours */
+  --fee-bg:    rgba(251,191,36,.11);
+  --fee-fg:    #fbbf24;
+  --fee-dot:   #f59e0b;
+  --fee-bdr:   rgba(251,191,36,.25);
+
+  --app-bg:    rgba(248,113,113,.11);
+  --app-fg:    #f87171;
+  --app-dot:   #ef4444;
+  --app-bdr:   rgba(248,113,113,.25);
+
+  --term-bg:   rgba(167,139,250,.11);
+  --term-fg:   #a78bfa;
+  --term-dot:  #8b5cf6;
+  --term-bdr:  rgba(167,139,250,.25);
+
+  --online-bg: rgba(52,211,153,.11);
+  --online-fg: #34d399;
+  --online-dot:#10b981;
+  --online-bdr:rgba(52,211,153,.25);
+
+  --offline-bg:rgba(96,165,250,.11);
+  --offline-fg:#60a5fa;
+  --offline-dot:#3b82f6;
+  --offline-bdr:rgba(96,165,250,.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+
+/* ── Layout ── */
+.app{max-width:1320px;margin:0 auto;padding:24px 20px}
+
+/* ── Header ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.topbar-left h1{font-size:20px;font-weight:600;letter-spacing:-.4px}
+.topbar-left p{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ── View toggle ── */
+.view-toggle{display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-md);overflow:hidden}
+.view-btn{padding:7px 16px;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;transition:all .15s}
+.view-btn.active{background:var(--s3);color:var(--text)}
+
+/* ── Filters ── */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+select.f-sel{appearance:none;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-md);color:var(--text);font-family:var(--sans);font-size:13px;padding:7px 30px 7px 11px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23636878' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
+select.f-sel:hover,select.f-sel:focus{border-color:var(--b3);outline:none}
+
+/* ── Month nav ── */
+.month-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.month-nav h2{font-size:17px;font-weight:600;letter-spacing:-.3px;min-width:190px}
+.nav-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-sm);color:var(--text);cursor:pointer;transition:background .15s}
+.nav-btn:hover{background:var(--s2)}
+.nav-btn svg{width:13px;height:13px}
+
+/* ── Legend ── */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;transition:opacity .15s;user-select:none}
+.leg.dimmed{opacity:.35}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── Calendar ── */
+.cal-head-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
+.cal-head-cell{text-align:center;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:5px 0 7px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--b1);border:1px solid var(--b1);border-radius:var(--r-lg);overflow:hidden}
+.day{background:var(--s1);min-height:96px;padding:6px 5px;position:relative;transition:background .1s}
+.day:hover{background:var(--s2)}
+.day.other{background:var(--bg);opacity:.4}
+.day.today{background:rgba(124,106,247,.07)}
+.day-num{font-size:11.5px;font-weight:500;color:var(--muted);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:2px}
+.today .day-num{background:#7c6af7;color:#fff;font-weight:600}
+.chip{display:block;font-size:10px;font-weight:500;padding:2px 5px;border-radius:3px;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .1s;border-left:2px solid transparent}
+.chip:hover{opacity:.75}
+.chip.fee    {background:var(--fee-bg);color:var(--fee-fg);border-color:var(--fee-dot)}
+.chip.app    {background:var(--app-bg);color:var(--app-fg);border-color:var(--app-dot)}
+.chip.term   {background:var(--term-bg);color:var(--term-fg);border-color:var(--term-dot)}
+.chip.online {background:var(--online-bg);color:var(--online-fg);border-color:var(--online-dot)}
+.chip.offline{background:var(--offline-bg);color:var(--offline-fg);border-color:var(--offline-dot)}
+.more-chip{font-size:10px;color:var(--muted);cursor:pointer;padding:1px 3px}
+
+/* ── List view ── */
+.list-wrap{overflow-x:auto}
+table.ltable{width:100%;border-collapse:collapse;min-width:600px}
+.ltable thead tr{border-bottom:1px solid var(--b2)}
+.ltable th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.ltable td{padding:9px 12px;border-bottom:1px solid var(--b1);font-size:13px;color:var(--text);vertical-align:middle}
+.ltable tbody tr{cursor:pointer;transition:background .1s}
+.ltable tbody tr:hover td{background:var(--s1)}
+.date-mono{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge.fee    {background:var(--fee-bg);color:var(--fee-fg)}
+.badge.app    {background:var(--app-bg);color:var(--app-fg)}
+.badge.term   {background:var(--term-bg);color:var(--term-fg)}
+.badge.online {background:var(--online-bg);color:var(--online-fg)}
+.badge.offline{background:var(--offline-bg);color:var(--offline-fg)}
+
+/* ── Data Manager Panel ── */
+.mgr-panel{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px}
+.mgr-tabs{display:flex;border-bottom:1px solid var(--b1);overflow-x:auto}
+.mgr-tab{padding:11px 20px;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-1px}
+.mgr-tab:hover{color:var(--text)}
+.mgr-tab.active{color:var(--text);border-bottom-color:currentColor}
+.mgr-tab.fee.active    {color:var(--fee-fg)}
+.mgr-tab.app.active    {color:var(--app-fg)}
+.mgr-tab.term.active   {color:var(--term-fg)}
+.mgr-tab.online.active {color:var(--online-fg)}
+.mgr-tab.offline.active{color:var(--offline-fg)}
+
+.mgr-body{padding:20px}
+.mgr-body-inner{display:none}
+.mgr-body-inner.active{display:block}
+.mgr-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px}
+.mgr-info{flex:1;min-width:200px}
+.mgr-info h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.mgr-info p{font-size:12px;color:var(--muted);line-height:1.6}
+.mgr-info .cols{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;background:var(--s2);padding:8px 10px;border-radius:var(--r-sm);border:1px solid var(--b1);line-height:1.8}
+.mgr-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:var(--r-md);font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--b2);background:var(--s2);color:var(--text);white-space:nowrap}
+.btn:hover{background:var(--s3);border-color:var(--b3)}
+.btn.primary{background:var(--s3);border-color:var(--b3)}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-upload{position:relative;overflow:hidden}
+.btn-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+
+/* row count pill */
+.count-pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;margin-left:8px}
+.count-pill.fee    {background:var(--fee-bg);color:var(--fee-fg)}
+.count-pill.app    {background:var(--app-bg);color:var(--app-fg)}
+.count-pill.term   {background:var(--term-bg);color:var(--term-fg)}
+.count-pill.online {background:var(--online-bg);color:var(--online-fg)}
+.count-pill.offline{background:var(--offline-bg);color:var(--offline-fg)}
+
+/* data preview table inside manager */
+.preview-wrap{overflow-x:auto;margin-top:14px;max-height:260px;overflow-y:auto;border:1px solid var(--b1);border-radius:var(--r-md)}
+table.ptable{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}
+.ptable th{position:sticky;top:0;background:var(--s2);text-align:left;padding:7px 10px;font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--b2);white-space:nowrap}
+.ptable td{padding:7px 10px;border-bottom:1px solid var(--b1);color:var(--text)}
+.ptable tr:last-child td{border-bottom:none}
+.ptable tbody tr:hover td{background:var(--s3)}
+
+/* ── Modal ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-lg);padding:22px;width:100%;max-width:440px;transform:translateY(10px);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0)}
+.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.modal-hd h3{font-size:15px;font-weight:600;letter-spacing:-.2px;line-height:1.3}
+.close-btn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-sm);cursor:pointer;color:var(--muted);font-size:15px;flex-shrink:0;transition:color .15s}
+.close-btn:hover{color:var(--text)}
+.mrow{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);font-size:13px}
+.mrow:last-child{border-bottom:none}
+.mlabel{color:var(--muted);min-width:110px;flex-shrink:0;font-size:12px;padding-top:1px}
+
+/* ── Stats ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r-md);padding:12px 14px}
+.stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.stat-val{font-size:22px;font-weight:600;letter-spacing:-.5px}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r-md);padding:10px 16px;font-size:13px;font-weight:500;z-index:2000;transform:translateY(60px);opacity:0;transition:all .25s;pointer-events:none;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:rgba(52,211,153,.3);color:var(--online-fg)}
+.toast.error{border-color:rgba(248,113,113,.3);color:var(--app-fg)}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  .app{padding:14px 10px}
+  .day{min-height:62px;padding:4px 3px}
+  .chip{font-size:9px;padding:1px 3px}
+  .day-num{font-size:10px}
+  .mgr-tab{padding:9px 14px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══════════════════════════════════════════════
+     SCHEMA — edit column definitions here
+═══════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────────
+   EVENT TYPE DEFINITIONS
+   Each entry defines one event type:
+     key        – internal ID (don't change after data is uploaded)
+     label      – display name
+     cls        – CSS class (fee | app | term | online | offline)
+     dateField  – which column holds the primary date for the calendar
+     titleField – which column to use as the chip label
+     columns    – ordered list of column headers for CSV import/export
+
+   To add a new column: add it to the `columns` array.
+   To rename a column: change the string here AND update your CSV header.
+   The order of `columns` sets the CSV column order.
+───────────────────────────────────────────────── */
+const TYPES = {
+
+  fee: {
+    label: 'Fee Deadlines',
+    cls: 'fee',
+    dateField: 'Fee Deadline',
+    titleField: 'Program',
+    columns: [
+      'Program',        // UG | PG
+      'Cohort',         // C1 | C2 | C3 …
+      'Term',           // T1 | T2 … T5
+      'Fee Notice 1',   // date
+      'Fee Notice 2',   // date
+      'Fee Notice 3',   // date
+      'Fee Notice 4',   // date
+      'Fee Deadline',   // primary date for calendar
+    ],
+    displayFields: [
+      'Program','Cohort','Term',
+      'Fee Notice 1','Fee Notice 2','Fee Notice 3','Fee Notice 4','Fee Deadline'
+    ],
+  },
+
+  app: {
+    label: 'Application Deadlines',
+    cls: 'app',
+    dateField: 'Application Deadline',
+    titleField: 'Program',
+    columns: [
+      'Program',              // UG | PG | Common
+      'Round',                // R1 | R2 …
+      'Application Deadline', // primary date
+    ],
+    displayFields: ['Program','Round','Application Deadline'],
+  },
+
+  term: {
+    label: 'Term Durations',
+    cls: 'term',
+    dateField: 'Check-In Start Date',
+    titleField: 'Program',
+    columns: [
+      'Program',              // UG | PG
+      'Cohort',               // C1 | C2 | C3
+      'Term',                 // T1 … T5
+      'Country',              // USA | China | India …
+      'Check-In Start Date',
+      'Check-In End Date',
+      'Orientation Start Date',
+      'Orientation Begin Date',
+      'Classes Start Date',
+      'Classes End Date',
+    ],
+    displayFields: [
+      'Program','Cohort','Term','Country',
+      'Check-In Start Date','Check-In End Date',
+      'Orientation Start Date','Orientation Begin Date',
+      'Classes Start Date','Classes End Date',
+    ],
+  },
+
+  online: {
+    label: 'Online Events',
+    cls: 'online',
+    dateField: 'Begin Date (DD/MM/YYYY)',
+    titleField: 'Name of the Event',
+    columns: [
+      'Funnel',                  // MOFU | BOFU
+      'Program',                 // UG | PG | Common
+      'Name of the Event',
+      'Begin Date (DD/MM/YYYY)',
+      'End Date (DD/MM/YYYY)',
+      'Start Time (IST HH:MM:SS)',
+      'End Time (IST HH:MM:SS)',
+      'Region/Country',
+      'Representative 1',
+      'Representative 2',
+    ],
+    displayFields: [
+      'Funnel','Program','Name of the Event',
+      'Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)',
+      'Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)',
+      'Region/Country','Representative 1','Representative 2',
+    ],
+  },
+
+  offline: {
+    label: 'Offline Events',
+    cls: 'offline',
+    dateField: 'Begin Date (DD/MM/YYYY)',
+    titleField: 'Name of the Event',
+    columns: [
+      'Funnel',                    // MOFU | BOFU
+      'Name of the Event',
+      'Type of the Event',         // Educational Conferences | School Fairs | Agent Fairs | Counsellors Commune | YLF | Masterclasses | Coffee Meetup | Tetr Takeover | Open Day
+      'Begin Date (DD/MM/YYYY)',
+      'End Date (DD/MM/YYYY)',
+      'Start Time (IST HH:MM:SS)',
+      'End Time (IST HH:MM:SS)',
+      'Region',
+      'Country',
+      'City',
+      'Location',
+      'Representative 1',
+      'Representative 2',
+    ],
+    displayFields: [
+      'Funnel','Name of the Event','Type of the Event',
+      'Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)',
+      'Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)',
+      'Region','Country','City','Location',
+      'Representative 1','Representative 2',
+    ],
+  },
+
+};
+/* ─────────────────────────────────────────────── END SCHEMA ─── */
+
+const DATE_FORMAT = 'DD/MM/YYYY';   // change if your dates are MM/DD/YYYY or YYYY-MM-DD
+const STORAGE_KEY = 'evtcal_v2';
+
+/* ─── State ─── */
+let store = {};          // typeKey → array of row objects
+let curYear  = new Date().getFullYear();
+let curMonth = new Date().getMonth();
+let calView  = 'month';  // 'month' | 'list'
+let activeType = 'fee';  // manager tab
+let hiddenTypes = new Set(); // for legend toggling
+let filterType = '';
+let filterMonth = '';
+
+/* ── Persistence ── */
+function saveStore() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch(e){}
+}
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) store = JSON.parse(raw);
+  } catch(e) {}
+  // ensure all type keys exist
+  Object.keys(TYPES).forEach(k => { if (!store[k]) store[k] = []; });
+}
+
+/* ── Date parsing ── */
+function parseDate(raw) {
+  if (!raw) return null;
+  raw = raw.toString().trim().replace(/\s+/g,'');
+  let m;
+  // DD/MM/YYYY or DD-MM-YYYY
+  m = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    const yr = +m[3] < 100 ? 2000 + +m[3] : +m[3];
+    if (DATE_FORMAT === 'MM/DD/YYYY') return new Date(yr, +m[1]-1, +m[2]);
+    return new Date(yr, +m[2]-1, +m[1]);
+  }
+  // YYYY-MM-DD
+  m = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  const d = new Date(raw);
+  return isNaN(d) ? null : d;
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+/* ── CSV ── */
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cells = [];
+    let cur = '', inQ = false;
+    for (const ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cells.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cells.push(cur.trim());
+    rows.push(cells);
+  }
+  return rows;
+}
+function csvEscape(v) {
+  const s = String(v ?? '');
+  return (s.includes(',') || s.includes('"') || s.includes('\n'))
+    ? `"${s.replace(/"/g,'""')}"` : s;
+}
+function generateCSV(typeKey) {
+  const def = TYPES[typeKey];
+  const rows = store[typeKey] || [];
+  const header = def.columns.join(',');
+  const body = rows.map(r => def.columns.map(c => csvEscape(r[c] ?? '')).join(',')).join('\n');
+  return header + '\n' + body;
+}
+function downloadCSV(typeKey) {
+  const csv = generateCSV(typeKey);
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${TYPES[typeKey].label.replace(/\s+/g,'_')}.csv`;
+  a.click();
+}
+function importCSV(typeKey, text) {
+  const rows = parseCSV(text);
+  if (rows.length < 2) { showToast('CSV appears empty', 'error'); return; }
+  const headers = rows[0].map(h => h.trim());
+  const data = rows.slice(1).filter(r => r.some(c=>c)).map(r => {
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = r[i] ?? ''; });
+    return obj;
+  });
+  store[typeKey] = data;
+  saveStore();
+  renderAll();
+  showToast(`${data.length} rows loaded into ${TYPES[typeKey].label}`, 'success');
+}
+function downloadTemplate(typeKey) {
+  const def = TYPES[typeKey];
+  const csv = def.columns.join(',') + '\n';
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${TYPES[typeKey].label.replace(/\s+/g,'_')}_template.csv`;
+  a.click();
+}
+
+/* ── All events flat list ── */
+function allEvents() {
+  const out = [];
+  Object.keys(TYPES).forEach(k => {
+    if (hiddenTypes.has(k)) return;
+    const def = TYPES[k];
+    (store[k] || []).forEach(row => {
+      const dateRaw = row[def.dateField];
+      const d = parseDate(dateRaw);
+      const title = row[def.titleField] || def.label;
+      out.push({ typeKey:k, cls:def.cls, label:def.label, title, date:d, raw:row });
+    });
+  });
+  return out;
+}
+
+/* ── Filtered events ── */
+function filteredEvents() {
+  let evts = allEvents();
+  if (filterType) evts = evts.filter(e => e.typeKey === filterType);
+  return evts;
+}
+
+/* ── Stats ── */
+function renderStats() {
+  const total = Object.keys(TYPES).reduce((s,k) => s + (store[k]||[]).length, 0);
+  const html = [
+    { label:'Total', val:total, cls:'', color:'' },
+    ...Object.keys(TYPES).map(k => ({
+      label: TYPES[k].label, val:(store[k]||[]).length,
+      cls:TYPES[k].cls, color:`var(--${TYPES[k].cls}-fg)`
+    }))
+  ].map(s => `<div class="stat">
+    <div class="stat-label">${s.label}</div>
+    <div class="stat-val" style="color:${s.color||'var(--text)'}">${s.val}</div>
+  </div>`).join('');
+  document.getElementById('statsBar').innerHTML = html;
+}
+
+/* ── Legend ── */
+function renderLegend() {
+  document.getElementById('legend').innerHTML = Object.keys(TYPES).map(k => {
+    const t = TYPES[k];
+    const dimmed = hiddenTypes.has(k) ? ' dimmed' : '';
+    return `<div class="leg${dimmed}" onclick="toggleType('${k}')" title="Click to show/hide">
+      <div class="leg-dot" style="background:var(--${t.cls}-dot)"></div>
+      ${t.label}
+    </div>`;
+  }).join('');
+}
+
+function toggleType(k) {
+  if (hiddenTypes.has(k)) hiddenTypes.delete(k);
+  else hiddenTypes.add(k);
+  renderLegend();
+  renderCalendar();
+  renderList();
+}
+
+/* ── Month calendar ── */
+function renderCalendar() {
+  const d1 = new Date(curYear, curMonth, 1);
+  document.getElementById('monthLabel').textContent =
+    d1.toLocaleString('default', { month:'long', year:'numeric' });
+
+  const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
+  const prevDays    = new Date(curYear, curMonth, 0).getDate();
+  const firstDay    = d1.getDay();
+  const today       = new Date();
+
+  const evts = filteredEvents().filter(e => e.date);
+  const evMap = {};
+  evts.forEach(e => {
+    const k = `${e.date.getFullYear()}-${e.date.getMonth()}-${e.date.getDate()}`;
+    (evMap[k] = evMap[k]||[]).push(e);
+  });
+
+  const cells = [];
+  for (let i = firstDay-1; i >= 0; i--) cells.push({d:prevDays-i, cur:false});
+  for (let d = 1; d <= daysInMonth; d++) cells.push({d, cur:true});
+  const rem = 42 - cells.length;
+  for (let d = 1; d <= rem; d++) cells.push({d, cur:false});
+
+  document.getElementById('calGrid').innerHTML = cells.map(({d,cur}) => {
+    const isToday = cur && d===today.getDate() && curMonth===today.getMonth() && curYear===today.getFullYear();
+    let chips = '';
+    if (cur) {
+      const key = `${curYear}-${curMonth}-${d}`;
+      const dayEvs = evMap[key] || [];
+      dayEvs.slice(0,3).forEach(e => {
+        const data = encodeURIComponent(JSON.stringify({typeKey:e.typeKey,raw:e.raw}));
+        chips += `<span class="chip ${e.cls}" onclick="showModal('${data}')" title="${e.title}">${e.title}</span>`;
+      });
+      if (dayEvs.length > 3) chips += `<span class="more-chip">+${dayEvs.length-3}</span>`;
+    }
+    return `<div class="day${cur?'':' other'}${isToday?' today':''}">
+      <div class="day-num">${d}</div>${chips}
+    </div>`;
+  }).join('');
+}
+
+/* ── List view ── */
+function renderList() {
+  const evts = filteredEvents().slice().sort((a,b)=>{
+    if (!a.date) return 1; if (!b.date) return -1;
+    return a.date - b.date;
+  });
+  if (!evts.length) {
+    document.getElementById('listBody').innerHTML =
+      '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--muted)">No events. Upload CSVs below.</td></tr>';
+    return;
+  }
+  document.getElementById('listBody').innerHTML = evts.map(e => {
+    const def = TYPES[e.typeKey];
+    const data = encodeURIComponent(JSON.stringify({typeKey:e.typeKey,raw:e.raw}));
+    // second display field for context
+    const secondKey = def.displayFields.find(f => f !== def.titleField && e.raw[f]);
+    const second = secondKey ? e.raw[secondKey] : '';
+    return `<tr onclick="showModal('${data}')">
+      <td class="date-mono">${fmtDate(e.date)}</td>
+      <td><span class="badge ${e.cls}"><span class="badge-dot" style="background:var(--${e.cls}-dot)"></span>${e.label}</span></td>
+      <td>${e.title}</td>
+      <td style="color:var(--muted);font-size:12px">${second}</td>
+      <td style="color:var(--muted);font-size:12px">${e.raw['Region/Country']||e.raw['Country']||e.raw['Region']||''}</td>
+      <td style="color:var(--muted);font-size:12px">${e.raw['Cohort']||e.raw['Round']||e.raw['Type of the Event']||''}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── Manager panel ── */
+function renderManager() {
+  // update tabs with counts
+  Object.keys(TYPES).forEach(k => {
+    const cnt = (store[k]||[]).length;
+    const pill = document.getElementById(`cnt-${k}`);
+    if (pill) pill.textContent = cnt;
+    pill.style.display = cnt ? '' : 'none';
+  });
+
+  // render active type body
+  const k = activeType;
+  const def = TYPES[k];
+  const rows = store[k] || [];
+  const body = document.getElementById(`mgr-body-${k}`);
+  if (!body) return;
+
+  // Column list
+  const colList = def.columns.join(' · ');
+
+  // Preview table
+  let preview = '';
+  if (rows.length) {
+    const cols = def.displayFields.slice(0, 6); // show first 6 cols
+    preview = `<div class="preview-wrap">
+      <table class="ptable">
+        <thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}${def.displayFields.length>6?'<th>…</th>':''}</tr></thead>
+        <tbody>${rows.slice(0,50).map(r=>`<tr>${cols.map(c=>`<td>${r[c]||''}</td>`).join('')}${def.displayFields.length>6?`<td style="color:var(--muted)">…</td>`:''}</tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+    if (rows.length > 50) preview += `<p style="font-size:12px;color:var(--muted);margin-top:8px">Showing 50 of ${rows.length} rows</p>`;
+  } else {
+    preview = `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;background:var(--s2);border-radius:var(--r-md);margin-top:14px;border:1px dashed var(--b2)">
+      No data yet — download the template, fill it in, and upload.
+    </div>`;
+  }
+
+  body.innerHTML = `
+    <div class="mgr-row">
+      <div class="mgr-info">
+        <h3>${def.label}</h3>
+        <p>Upload a CSV with these columns (in any order):</p>
+        <div class="cols">${colList}</div>
+      </div>
+      <div class="mgr-actions">
+        <button class="btn" onclick="downloadTemplate('${k}')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Template
+        </button>
+        ${rows.length ? `<button class="btn" onclick="downloadCSV('${k}')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Export CSV
+        </button>` : ''}
+        <label class="btn primary btn-upload">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Upload CSV
+          <input type="file" accept=".csv,text/csv" onchange="handleUpload(event,'${k}')">
+        </label>
+        ${rows.length ? `<button class="btn" style="color:var(--app-fg);border-color:var(--app-bdr)" onclick="clearType('${k}')">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          Clear
+        </button>` : ''}
+      </div>
+    </div>
+    ${preview}`;
+}
+
+function handleUpload(evt, typeKey) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => importCSV(typeKey, e.target.result);
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+function clearType(k) {
+  if (!confirm(`Clear all ${TYPES[k].label} data?`)) return;
+  store[k] = [];
+  saveStore();
+  renderAll();
+  showToast(`${TYPES[k].label} cleared`, 'success');
+}
+
+function switchMgrTab(k) {
+  activeType = k;
+  document.querySelectorAll('.mgr-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${k}`).classList.add('active');
+  document.querySelectorAll('.mgr-body-inner').forEach(b => b.classList.remove('active'));
+  document.getElementById(`mgr-body-${k}`).classList.add('active');
+  renderManager();
+}
+
+/* ── Modal ── */
+function showModal(encoded) {
+  const { typeKey, raw } = JSON.parse(decodeURIComponent(encoded));
+  const def = TYPES[typeKey];
+  const rows = def.displayFields
+    .filter(f => raw[f])
+    .map(f => `<div class="mrow"><span class="mlabel">${f}</span><span>${raw[f]}</span></div>`);
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-hd">
+      <div>
+        <span class="badge ${def.cls}" style="margin-bottom:8px;display:inline-flex"><span class="badge-dot" style="background:var(--${def.cls}-dot)"></span>${def.label}</span>
+        <h3>${raw[def.titleField] || def.label}</h3>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    ${rows.join('')}`;
+  const ov = document.getElementById('overlay');
+  ov.style.display='flex';
+  requestAnimationFrame(()=>ov.classList.add('open'));
+}
+function closeModal() {
+  const ov = document.getElementById('overlay');
+  ov.classList.remove('open');
+  setTimeout(()=>{ov.style.display='none'},200);
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 3000);
+}
+
+/* ── View toggle ── */
+function switchView(v) {
+  calView = v;
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.view-btn[data-v="${v}"]`).classList.add('active');
+  document.getElementById('monthView').style.display = v==='month' ? '' : 'none';
+  document.getElementById('listView').style.display  = v==='list'  ? '' : 'none';
+  if (v==='month') renderCalendar(); else renderList();
+}
+
+function changeMonth(d) {
+  curMonth += d;
+  if (curMonth > 11) { curMonth=0; curYear++; }
+  if (curMonth < 0)  { curMonth=11; curYear--; }
+  renderCalendar();
+}
+
+/* ── Filter dropdowns ── */
+function buildFilters() {
+  const sel = document.getElementById('fType');
+  sel.innerHTML = '<option value="">All event types</option>' +
+    Object.keys(TYPES).map(k=>`<option value="${k}">${TYPES[k].label}</option>`).join('');
+}
+
+/* ── Render all ── */
+function renderAll() {
+  renderStats();
+  renderLegend();
+  renderCalendar();
+  renderList();
+  renderManager();
+}
+
+/* ── Boot ── */
+loadStore();
+</script>
+
+<!-- ═══════════════════════════════════════════════
+     HTML
+═══════════════════════════════════════════════ -->
+
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>Events Calendar</h1>
+    <p>Upload CSVs per event type · data stored in browser</p>
+  </div>
+  <div class="view-toggle">
+    <button class="view-btn active" data-v="month" onclick="switchView('month')">Monthly</button>
+    <button class="view-btn" data-v="list" onclick="switchView('list')">List</button>
+  </div>
+</div>
+
+<div class="stats" id="statsBar"></div>
+
+<div class="filter-row">
+  <select class="f-sel" id="fType" onchange="filterType=this.value;renderCalendar();renderList()">
+    <option value="">All event types</option>
+  </select>
+</div>
+
+<!-- Monthly view -->
+<div id="monthView">
+  <div class="month-nav">
+    <button class="nav-btn" onclick="changeMonth(-1)" aria-label="Prev">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <h2 id="monthLabel"></h2>
+    <button class="nav-btn" onclick="changeMonth(1)" aria-label="Next">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="cal-head-row">
+    <div class="cal-head-cell">Sun</div><div class="cal-head-cell">Mon</div>
+    <div class="cal-head-cell">Tue</div><div class="cal-head-cell">Wed</div>
+    <div class="cal-head-cell">Thu</div><div class="cal-head-cell">Fri</div>
+    <div class="cal-head-cell">Sat</div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<!-- List view -->
+<div id="listView" style="display:none">
+  <div class="list-wrap">
+    <table class="ltable">
+      <thead><tr>
+        <th>Date</th><th>Type</th><th>Name / Program</th>
+        <th>Detail</th><th>Region</th><th>Cohort / Round</th>
+      </tr></thead>
+      <tbody id="listBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Data Manager ── -->
+<div style="margin-top:32px;margin-bottom:8px;display:flex;align-items:center;gap:12px">
+  <span style="font-size:15px;font-weight:600;letter-spacing:-.2px">Data Manager</span>
+  <span style="font-size:12px;color:var(--muted)">Upload · export · manage CSVs per event type</span>
+</div>
+
+<div class="mgr-panel">
+  <div class="mgr-tabs" id="mgrTabs">
+    <!-- tabs injected by JS -->
+  </div>
+  <div class="mgr-body" id="mgrBody">
+    <!-- body panels injected by JS -->
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Build manager HTML ── */
+(function buildMgr() {
+  const tabsEl = document.getElementById('mgrTabs');
+  const bodyEl = document.getElementById('mgrBody');
+  Object.keys(TYPES).forEach((k, i) => {
+    const def = TYPES[k];
+    // tab
+    const btn = document.createElement('button');
+    btn.className = `mgr-tab ${def.cls}${i===0?' active':''}`;
+    btn.id = `tab-${k}`;
+    btn.innerHTML = `${def.label}<span class="count-pill ${def.cls}" id="cnt-${k}" style="display:none">0</span>`;
+    btn.onclick = () => switchMgrTab(k);
+    tabsEl.appendChild(btn);
+    // body panel
+    const div = document.createElement('div');
+    div.className = `mgr-body-inner${i===0?' active':''}`;
+    div.id = `mgr-body-${k}`;
+    bodyEl.appendChild(div);
+  });
+})();
+
+/* ── Populate type filter ── */
+buildFilters();
+
+/* ── Initial render ── */
+renderAll();
+</script>
+</body>
+</html>

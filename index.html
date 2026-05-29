@@ -4,174 +4,219 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Events Calendar</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:   #0b0c0e;
-  --s1:   #13151a;
-  --s2:   #1a1d24;
-  --s3:   #22262f;
-  --b1:   rgba(255,255,255,.06);
-  --b2:   rgba(255,255,255,.11);
-  --b3:   rgba(255,255,255,.20);
-  --text: #e4e6eb;
-  --muted:#636878;
-  --sans: 'DM Sans', system-ui, sans-serif;
-  --mono: 'DM Mono', monospace;
-  --rsm:5px; --rmd:10px; --rlg:16px;
+  --brand-green:   #009C50;
+  --brand-dkgreen: #004822;
+  --brand-pink:    #F8769A;
+  --brand-yellow:  #F0C300;
+  --brand-cyan:    #4CC9E9;
+  --brand-purple:  #9C2AB5;
 
-  --fee-bg:rgba(251,191,36,.12);    --fee-fg:#fbbf24;    --fee-dot:#f59e0b;    --fee-bdr:rgba(251,191,36,.28);
-  --app-bg:rgba(248,113,113,.12);   --app-fg:#f87171;    --app-dot:#ef4444;    --app-bdr:rgba(248,113,113,.28);
-  --term-bg:rgba(167,139,250,.12);  --term-fg:#a78bfa;   --term-dot:#8b5cf6;   --term-bdr:rgba(167,139,250,.28);
-  --online-bg:rgba(52,211,153,.12); --online-fg:#34d399; --online-dot:#10b981; --online-bdr:rgba(52,211,153,.28);
-  --offline-bg:rgba(96,165,250,.12);--offline-fg:#60a5fa;--offline-dot:#3b82f6;--offline-bdr:rgba(96,165,250,.28);
+  --bg:   #0b0d0f;
+  --s1:   #111318;
+  --s2:   #181b22;
+  --s3:   #1f2330;
+  --s4:   #262b38;
+  --b1:   rgba(255,255,255,.055);
+  --b2:   rgba(255,255,255,.10);
+  --b3:   rgba(255,255,255,.18);
+  --text: #e8eaf0;
+  --muted:#5a6275;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --rsm:4px; --rmd:8px; --rlg:14px;
+
+  --fee-c:#F0C300;    --fee-bg:rgba(240,195,0,.11);    --fee-bdr:rgba(240,195,0,.3);
+  --app-c:#F8769A;    --app-bg:rgba(248,118,154,.11);   --app-bdr:rgba(248,118,154,.3);
+  --term-c:#4CC9E9;   --term-bg:rgba(76,201,233,.11);   --term-bdr:rgba(76,201,233,.3);
+  --online-c:#009C50; --online-bg:rgba(0,156,80,.11);   --online-bdr:rgba(0,156,80,.3);
+  --offline-c:#9C2AB5;--offline-bg:rgba(156,42,181,.11);--offline-bdr:rgba(156,42,181,.3);
+
+  /* fee sub-shades */
+  --fee1-c:#F0C300; --fee2-c:#d4a800; --fee3-c:#b88f00; --fee4-c:#9c7800; --feed-c:#e05a00;
+  /* term sub-shades */
+  --checkin-c:#4CC9E9; --orient-c:#2ab5d4; --classes-c:#1a9db8;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--s4);border-radius:3px}
 
-.app{max-width:1340px;margin:0 auto;padding:22px 18px}
+.app{max-width:1400px;margin:0 auto;padding:20px 18px}
 
-/* ── Topbar ── */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap}
-.topbar h1{font-size:19px;font-weight:600;letter-spacing:-.4px}
-.topbar p{font-size:12px;color:var(--muted);margin-top:1px}
+/* Topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.topbar h1{font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
+.topbar h1 .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-green);flex-shrink:0}
+.topbar p{font-size:11.5px;color:var(--muted);margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
-/* ── Buttons ── */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rmd);font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--b2);background:var(--s1);color:var(--text);transition:all .15s;white-space:nowrap}
-.btn:hover{background:var(--s2);border-color:var(--b3)}
-.btn svg{width:14px;height:14px;flex-shrink:0}
-.btn.spinning svg{animation:spin .65s linear infinite}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--rmd);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--b2);background:var(--s2);color:var(--text);transition:all .15s;white-space:nowrap;font-family:var(--sans)}
+.btn:hover{background:var(--s3);border-color:var(--b3)}
+.btn svg{width:13px;height:13px;flex-shrink:0}
+.btn.spinning svg{animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.btn-today{border-color:rgba(0,156,80,.4);color:var(--brand-green)}
+.btn-today:hover{background:rgba(0,156,80,.08)}
 
-/* ── View toggle ── */
+/* View toggle */
 .vtoggle{display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rmd);overflow:hidden}
-.vbtn{padding:7px 15px;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;transition:all .15s}
-.vbtn.active{background:var(--s3);color:var(--text)}
+.vbtn{padding:7px 14px;font-size:12.5px;font-weight:500;color:var(--muted);background:none;border:none;border-right:1px solid var(--b1);cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.vbtn:last-child{border-right:none}
+.vbtn.active{background:var(--s4);color:var(--text)}
 
-/* ── Stats ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:9px;margin-bottom:18px}
-.stat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:11px 13px}
-.stat-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px}
-.stat-val{font-size:21px;font-weight:600;letter-spacing:-.5px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-bottom:16px}
+.stat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:10px 12px}
+.stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+.stat-val{font-size:20px;font-weight:700;letter-spacing:-.5px}
 
-/* ── Filters ── */
-.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-select.fsel{appearance:none;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rmd);color:var(--text);font-family:var(--sans);font-size:13px;padding:7px 28px 7px 11px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23636878' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
+/* Filters */
+.filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+select.fsel{appearance:none;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rmd);color:var(--text);font-family:var(--sans);font-size:12.5px;padding:6px 26px 6px 10px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%235a6275' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .15s}
 select.fsel:focus{outline:none;border-color:var(--b3)}
-.status-tag{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto}
-.status-tag.err{color:#f87171}
-.status-tag.ok{color:var(--online-fg)}
+.status-pill{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--s1);border:1px solid var(--b1);border-radius:20px;padding:4px 10px;margin-left:auto}
+.status-pill.ok{color:var(--brand-green);border-color:rgba(0,156,80,.25)}
+.status-pill.err{color:var(--brand-pink);border-color:rgba(248,118,154,.25)}
 
-/* ── Legend ── */
-.legend{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:13px}
-.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none;transition:opacity .15s}
-.leg.off{opacity:.28}
-.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* Legend */
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none;transition:opacity .15s}
+.leg.off{opacity:.22}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-/* ── Month nav ── */
-.mnav{display:flex;align-items:center;gap:10px;margin-bottom:13px}
-.mnav h2{font-size:16px;font-weight:600;letter-spacing:-.3px;min-width:186px}
-.nbtn{width:27px;height:27px;display:flex;align-items:center;justify-content:center;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rsm);color:var(--text);cursor:pointer;transition:background .15s}
+/* Nav row */
+.nav-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.nav-row h2{font-size:16px;font-weight:600;letter-spacing:-.3px;min-width:200px}
+.nbtn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rsm);color:var(--text);cursor:pointer;transition:background .15s}
 .nbtn:hover{background:var(--s2)}
-.nbtn svg{width:13px;height:13px}
+.nbtn svg{width:12px;height:12px}
 
-/* ── Calendar grid ── */
-.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
-.cal-head div{text-align:center;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:5px 0 7px}
+/* ══ MONTHLY ══ */
+.cal-head-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
+.cal-head-row div{text-align:center;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 0 6px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--b1);border:1px solid var(--b1);border-radius:var(--rlg);overflow:hidden}
-.day{background:var(--s1);min-height:100px;padding:6px 5px;transition:background .1s}
-.day:hover{background:var(--s2)}
-.day.other{background:var(--bg);opacity:.38}
-.day.today{background:rgba(124,106,247,.08)}
-.dnum{font-size:11px;font-weight:500;color:var(--muted);width:21px;height:21px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:3px}
-.today .dnum{background:#7c6af7;color:#fff;font-weight:600}
+.mday{background:var(--s1);min-height:96px;padding:5px 4px;transition:background .1s;cursor:default}
+.mday:hover{background:var(--s2)}
+.mday.other{background:var(--bg);opacity:.32}
+.mday.today{background:rgba(0,156,80,.06)}
+.mday.cur-day-sel{outline:2px solid var(--brand-green);outline-offset:-2px}
+.dnum{font-size:11px;font-weight:700;color:var(--muted);width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.today .dnum{background:var(--brand-green);color:#fff}
 
-/* ── Chips ── */
-.chip{display:block;font-size:10px;font-weight:500;padding:0 0 2px;margin-bottom:2px;cursor:pointer;border-left:2px solid transparent;padding-left:5px;border-radius:2px;transition:opacity .1s;overflow:hidden}
-.chip:hover{opacity:.72}
-.chip-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
-.chip-attrs{display:flex;gap:3px;flex-wrap:wrap;margin-top:1px}
-.chip-tag{font-size:9px;font-weight:600;padding:0px 4px;border-radius:3px;opacity:.85;line-height:1.5}
+/* chips */
+.chip{display:block;font-size:9.5px;font-weight:600;padding:2px 5px 2px 4px;margin-bottom:2px;cursor:pointer;border-left:2px solid;border-radius:2px;transition:opacity .12s;overflow:hidden}
+.chip:hover{opacity:.68}
+.chip-r1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.chip-r2{display:flex;gap:2px;flex-wrap:wrap;margin-top:1px}
+.ctag{font-size:8.5px;font-weight:700;padding:0 3px;border-radius:2px;line-height:1.5;opacity:.9}
+.more-lbl{font-size:9px;color:var(--muted);padding-left:4px;cursor:pointer;display:block;margin-top:1px}
 
-.chip.fee    {background:var(--fee-bg);   color:var(--fee-fg);  border-color:var(--fee-dot)}
-.chip.app    {background:var(--app-bg);   color:var(--app-fg);  border-color:var(--app-dot)}
-.chip.term   {background:var(--term-bg);  color:var(--term-fg); border-color:var(--term-dot)}
-.chip.online {background:var(--online-bg);color:var(--online-fg);border-color:var(--online-dot)}
-.chip.offline{background:var(--offline-bg);color:var(--offline-fg);border-color:var(--offline-dot)}
+/* colour classes */
+.chip.fee,.tev.fee,.allday-chip.fee,.badge.fee,.ctag.fee          {background:var(--fee-bg);color:var(--fee-c);border-color:var(--fee-c)}
+.chip.fee1,.tev.fee1,.allday-chip.fee1,.badge.fee1,.ctag.fee1     {background:rgba(240,195,0,.1);color:var(--fee1-c);border-color:var(--fee1-c)}
+.chip.fee2,.tev.fee2,.allday-chip.fee2,.badge.fee2,.ctag.fee2     {background:rgba(212,168,0,.1);color:var(--fee2-c);border-color:var(--fee2-c)}
+.chip.fee3,.tev.fee3,.allday-chip.fee3,.badge.fee3,.ctag.fee3     {background:rgba(184,143,0,.1);color:var(--fee3-c);border-color:var(--fee3-c)}
+.chip.fee4,.tev.fee4,.allday-chip.fee4,.badge.fee4,.ctag.fee4     {background:rgba(156,120,0,.1);color:var(--fee4-c);border-color:var(--fee4-c)}
+.chip.feed,.tev.feed,.allday-chip.feed,.badge.feed,.ctag.feed     {background:rgba(224,90,0,.1);color:var(--feed-c);border-color:var(--feed-c)}
+.chip.app,.tev.app,.allday-chip.app,.badge.app,.ctag.app          {background:var(--app-bg);color:var(--app-c);border-color:var(--app-c)}
+.chip.term,.tev.term,.allday-chip.term,.badge.term,.ctag.term     {background:var(--term-bg);color:var(--term-c);border-color:var(--term-c)}
+.chip.checkin,.tev.checkin,.allday-chip.checkin,.badge.checkin,.ctag.checkin{background:rgba(76,201,233,.1);color:var(--checkin-c);border-color:var(--checkin-c)}
+.chip.orient,.tev.orient,.allday-chip.orient,.badge.orient,.ctag.orient    {background:rgba(42,181,212,.1);color:var(--orient-c);border-color:var(--orient-c)}
+.chip.classes,.tev.classes,.allday-chip.classes,.badge.classes,.ctag.classes{background:rgba(26,157,184,.1);color:var(--classes-c);border-color:var(--classes-c)}
+.chip.online,.tev.online,.allday-chip.online,.badge.online,.ctag.online    {background:var(--online-bg);color:var(--online-c);border-color:var(--online-c)}
+.chip.offline,.tev.offline,.allday-chip.offline,.badge.offline,.ctag.offline{background:var(--offline-bg);color:var(--offline-c);border-color:var(--offline-c)}
 
-.chip-tag.fee    {background:rgba(251,191,36,.2);   color:var(--fee-fg)}
-.chip-tag.app    {background:rgba(248,113,113,.2);  color:var(--app-fg)}
-.chip-tag.term   {background:rgba(167,139,250,.2);  color:var(--term-fg)}
-.chip-tag.online {background:rgba(52,211,153,.2);   color:var(--online-fg)}
-.chip-tag.offline{background:rgba(96,165,250,.2);   color:var(--offline-fg)}
+/* ══ TIME GRID (week + day) ══ */
+.tg-shell{border:1px solid var(--b1);border-radius:var(--rlg);overflow:hidden;background:var(--s1);display:flex;flex-direction:column}
+.allday-bar{display:flex;border-bottom:1px solid var(--b2);min-height:28px}
+.allday-lbl{width:52px;flex-shrink:0;font-size:9px;font-family:var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:flex-end;padding-right:6px;border-right:1px solid var(--b1)}
+.allday-cols{flex:1;display:flex}
+.allday-col{flex:1;padding:3px 2px;border-right:1px solid var(--b1)}
+.allday-col:last-child{border-right:none}
+.allday-chip{display:block;font-size:9.5px;font-weight:700;padding:2px 5px;border-radius:2px;border-left:2px solid;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.allday-chip:hover{opacity:.7}
 
-.more-lbl{font-size:10px;color:var(--muted);cursor:pointer;padding-left:5px;margin-top:1px;display:block}
+.tg-body{display:flex;overflow-y:auto;max-height:calc(100vh - 300px);min-height:420px}
+.tg-time-col{width:52px;flex-shrink:0;border-right:1px solid var(--b1)}
+.tg-time-cell{height:48px;display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 7px 0 0;font-family:var(--mono);font-size:9.5px;color:var(--muted);border-bottom:1px dashed var(--b1)}
+.tg-days{flex:1;display:flex}
+.tg-day-col{flex:1;position:relative;border-right:1px solid var(--b1);min-width:0}
+.tg-day-col:last-child{border-right:none}
+.tg-day-col.is-today{background:rgba(0,156,80,.025)}
+.tg-hour{height:48px;border-bottom:1px dashed var(--b1);position:relative}
+.tg-half{position:absolute;top:50%;left:0;right:0;border-top:1px dashed rgba(255,255,255,.03)}
+.now-bar{position:absolute;left:0;right:0;height:2px;background:var(--brand-pink);z-index:10;pointer-events:none}
+.now-bar::before{content:'';position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--brand-pink)}
 
-/* ── List view ── */
-.list-wrap{overflow-x:auto}
-table.ltbl{width:100%;border-collapse:collapse;min-width:680px}
+.tev{position:absolute;left:2px;right:2px;border-radius:3px;padding:3px 5px;font-size:10px;font-weight:600;cursor:pointer;overflow:hidden;transition:opacity .12s;border-left:3px solid;z-index:2;min-height:18px}
+.tev:hover{opacity:.72;z-index:8}
+.tev-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.tev-time{font-size:8.5px;opacity:.7;font-family:var(--mono);margin-top:1px}
+.tev-ctags{display:flex;gap:2px;flex-wrap:wrap;margin-top:2px}
+
+/* day column headers */
+.tg-head{display:flex;border-bottom:1px solid var(--b2)}
+.tg-head-spacer{width:52px;flex-shrink:0;border-right:1px solid var(--b1)}
+.tg-head-days{flex:1;display:flex}
+.tg-day-hd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-right:1px solid var(--b1);gap:1px}
+.tg-day-hd:last-child{border-right:none}
+.tg-day-hd.is-today{background:rgba(0,156,80,.05)}
+.tg-day-name{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.tg-day-num{font-size:18px;font-weight:700;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;line-height:1;font-variant-numeric:tabular-nums}
+.is-today .tg-day-num{background:var(--brand-green);color:#fff}
+
+/* ══ LIST ══ */
+.list-scroll{overflow-x:auto}
+table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
 .ltbl thead tr{border-bottom:1px solid var(--b2)}
-.ltbl th{text-align:left;padding:8px 12px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-.ltbl td{padding:9px 12px;border-bottom:1px solid var(--b1);font-size:13px;vertical-align:middle}
+.ltbl th{text-align:left;padding:8px 11px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.ltbl td{padding:8px 11px;border-bottom:1px solid var(--b1);font-size:12.5px;vertical-align:middle}
 .ltbl tbody tr{cursor:pointer;transition:background .1s}
 .ltbl tbody tr:hover td{background:var(--s1)}
-.dmono{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
-.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.bdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.badge.fee    {background:var(--fee-bg);color:var(--fee-fg)}
-.badge.app    {background:var(--app-bg);color:var(--app-fg)}
-.badge.term   {background:var(--term-bg);color:var(--term-fg)}
-.badge.online {background:var(--online-bg);color:var(--online-fg)}
-.badge.offline{background:var(--offline-bg);color:var(--offline-fg)}
-.attr-tags{display:flex;gap:4px;flex-wrap:wrap}
-.attr-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
-.attr-tag.fee    {background:var(--fee-bg);color:var(--fee-fg)}
-.attr-tag.app    {background:var(--app-bg);color:var(--app-fg)}
-.attr-tag.term   {background:var(--term-bg);color:var(--term-fg)}
-.attr-tag.online {background:var(--online-bg);color:var(--online-fg)}
-.attr-tag.offline{background:var(--offline-bg);color:var(--offline-fg)}
+.dmono{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;font-size:10.5px;font-weight:700}
+.bdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.attr-tag{font-size:10.5px;padding:1px 6px;border-radius:3px;font-weight:600;display:inline-block}
 
-/* ── Modal ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+/* ══ MODAL ══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--s1);border:1px solid var(--b2);border-radius:var(--rlg);padding:22px;width:100%;max-width:460px;transform:translateY(10px);transition:transform .2s;max-height:90vh;overflow-y:auto}
+.modal{background:var(--s2);border:1px solid var(--b3);border-radius:var(--rlg);padding:22px;width:100%;max-width:460px;transform:translateY(8px);transition:transform .2s;max-height:90vh;overflow-y:auto}
 .overlay.open .modal{transform:translateY(0)}
-.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
-.modal-hd-left{}
-.modal-title{font-size:15px;font-weight:600;letter-spacing:-.2px;line-height:1.35;margin-top:7px}
-.close-btn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rsm);cursor:pointer;color:var(--muted);font-size:15px;flex-shrink:0;transition:color .15s}
+.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.modal-title{font-size:15px;font-weight:700;letter-spacing:-.2px;line-height:1.3;margin-top:6px}
+.close-btn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--s3);border:1px solid var(--b1);border-radius:var(--rsm);cursor:pointer;color:var(--muted);font-size:14px;flex-shrink:0;transition:color .15s}
 .close-btn:hover{color:var(--text)}
-.mrow{display:grid;grid-template-columns:120px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--b1);font-size:13px;align-items:start}
+.mrow{display:grid;grid-template-columns:130px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1);font-size:12.5px;align-items:start}
 .mrow:last-child{border-bottom:none}
-.mlabel{color:var(--muted);font-size:12px;padding-top:1px}
+.mlabel{color:var(--muted);font-size:11px;padding-top:2px;font-weight:500}
 
-/* ── Last updated bar ── */
-.lu-bar{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:10px 14px;margin-top:28px;font-size:12px;color:var(--muted);flex-wrap:wrap;gap:8px}
+/* ══ FOOTER ══ */
+.lu-bar{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:9px 13px;margin-top:22px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;gap:7px}
 .lu-bar strong{color:var(--text);font-weight:500}
 .src-links{display:flex;gap:10px;flex-wrap:wrap}
-.src-link{font-size:11.5px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .15s}
+.src-link{font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:3px;transition:color .15s}
 .src-link:hover{color:var(--text)}
 
-/* ── Toast ── */
-.toast{position:fixed;bottom:22px;right:22px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--rmd);padding:9px 15px;font-size:13px;font-weight:500;z-index:2000;transform:translateY(56px);opacity:0;transition:all .22s;pointer-events:none;max-width:300px}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s4);border:1px solid var(--b2);border-radius:var(--rmd);padding:8px 14px;font-size:12.5px;font-weight:500;z-index:9998;transform:translateY(52px);opacity:0;transition:all .22s;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
-.toast.ok{border-color:var(--online-bdr);color:var(--online-fg)}
-.toast.err{border-color:var(--app-bdr);color:var(--app-fg)}
+.toast.ok{border-color:rgba(0,156,80,.35);color:var(--brand-green)}
+.toast.err{border-color:rgba(248,118,154,.35);color:var(--brand-pink)}
 
-/* ── Skeleton ── */
-.skel{background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:3px;height:14px;margin-bottom:3px}
-@keyframes shimmer{to{background-position:-200% 0}}
-
-@media(max-width:640px){
-  .app{padding:12px 10px}
-  .day{min-height:60px;padding:4px 3px}
-  .chip{font-size:9px}
-  .chip-attrs{display:none}
-  .dnum{font-size:10px}
+@media(max-width:700px){
+  .app{padding:10px 8px}
+  .mday{min-height:56px;padding:3px 2px}
+  .chip{font-size:8.5px}
+  .chip-r2{display:none}
+  .tg-time-col{width:36px}
+  .tg-time-cell{font-size:8.5px;padding-right:3px}
+  .stat-val{font-size:17px}
 }
 </style>
 </head>
@@ -179,410 +224,378 @@ table.ltbl{width:100%;border-collapse:collapse;min-width:680px}
 <div class="app">
 
 <script>
-/* ══════════════════════════════════════════════════════
-   CONFIGURATION
-   ══════════════════════════════════════════════════════ */
-
+/* ═══ SHEET CONFIG ═══ */
 const SHEETS = {
   fee: {
-    label: 'Fee Deadlines',
-    cls:   'fee',
-    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=232696750&single=true&output=csv',
-    // Which column holds the primary date to plot on calendar
-    dateField:  'Fee Deadline',
-    // Chip title shown on calendar cell
-    titleField: 'Program',
-    // Tags shown on chip (compact attributes)
-    chipTags:   ['Cohort', 'Term'],
-    // All fields shown in the detail modal
-    modalFields: ['Program','Cohort','Term','Fee Notice 1','Fee Notice 2','Fee Notice 3','Fee Notice 4','Fee Deadline'],
+    label:'Fee Deadlines', cls:'fee',
+    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=232696750&single=true&output=csv',
+    subEvents:[
+      {field:'Fee Reminder 1',cls:'fee1',label:'Fee Reminder 1'},
+      {field:'Fee Reminder 2',cls:'fee2',label:'Fee Reminder 2'},
+      {field:'Fee Reminder 3',cls:'fee3',label:'Fee Reminder 3'},
+      {field:'Fee Reminder 4',cls:'fee4',label:'Fee Reminder 4'},
+      {field:'Fee Deadline',  cls:'feed',label:'Fee Deadline'},
+    ],
+    chipTags:['Program','Cohort','Term'],
+    titleBase:'Program',
+    modalFields:['Program','Cohort','Term','Fee Reminder 1','Fee Reminder 2','Fee Reminder 3','Fee Reminder 4','Fee Deadline'],
   },
-  app: {
-    label: 'Application Deadlines',
-    cls:   'app',
-    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=224187494&single=true&output=csv',
-    dateField:  'Application Deadline',
-    titleField: 'Program',
-    chipTags:   ['Round'],
-    modalFields: ['Program','Round','Application Deadline'],
+  app:{
+    label:'Application Deadlines',cls:'app',
+    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=224187494&single=true&output=csv',
+    dateField:'Application Deadline',titleField:'Program',
+    chipTags:['Program','Round'],
+    modalFields:['Program','Round','Application Deadline'],
   },
-  term: {
-    label: 'Term Durations',
-    cls:   'term',
-    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=1136162814&single=true&output=csv',
-    dateField:  'Check-In Start Date',
-    titleField: 'Program',
-    chipTags:   ['Cohort','Country'],
-    modalFields: ['Program','Cohort','Term','Country','Check-In Start Date','Check-In End Date','Orientation Start Date','Orientation Begin Date','Classes Start Date','Classes End Date'],
+  term:{
+    label:'Term Durations',cls:'term',
+    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=1136162814&single=true&output=csv',
+    subEvents:[
+      {field:'Check-In Start Date',   cls:'checkin',label:'Check-In Start'},
+      {field:'Check-In End Date',     cls:'checkin',label:'Check-In End'},
+      {field:'Orientation Start Date',cls:'orient', label:'Orientation Start'},
+      {field:'Orientation End Date',  cls:'orient', label:'Orientation End'},
+      {field:'Classes Start Date',    cls:'classes',label:'Classes Start'},
+      {field:'Classes End Date',      cls:'classes',label:'Classes End'},
+    ],
+    chipTags:['Program','Cohort','Country'],
+    titleBase:'Program',
+    modalFields:['Program','Cohort','Term','Country','Check-In Start Date','Check-In End Date','Orientation Start Date','Orientation End Date','Classes Start Date','Classes End Date'],
   },
-  online: {
-    label: 'Online Events',
-    cls:   'online',
-    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
-    dateField:  'Begin Date (DD/MM/YYYY)',
-    titleField: 'Name of the Event',
-    chipTags:   ['Program','Funnel'],
-    modalFields: ['Funnel','Program','Name of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region/Country','Representative 1','Representative 2'],
+  online:{
+    label:'Online Events',cls:'online',
+    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
+    dateField:'Begin Date (DD/MM/YYYY)',titleField:'Name of the Event',
+    chipTags:['Program','Funnel'],
+    modalFields:['Funnel','Program','Name of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region/Country','Representative 1','Representative 2'],
   },
-  offline: {
-    label: 'Offline Events',
-    cls:   'offline',
-    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=77530506&single=true&output=csv',
-    dateField:  'Begin Date (DD/MM/YYYY)',
-    titleField: 'Name of the Event',
-    chipTags:   ['Type of the Event','Country'],
-    modalFields: ['Funnel','Name of the Event','Type of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region','Country','City','Location','Representative 1','Representative 2'],
+  offline:{
+    label:'Offline Events',cls:'offline',
+    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=77530506&single=true&output=csv',
+    dateField:'Begin Date (DD/MM/YYYY)',titleField:'Name of the Event',
+    chipTags:['Type of the Event','Country'],
+    modalFields:['Funnel','Name of the Event','Type of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region','Country','City','Location','Representative 1','Representative 2'],
   },
 };
 
-/* ══════════════════════════════════════════════════════
-   STATE
-   ══════════════════════════════════════════════════════ */
-let store     = {};   // typeKey → array of row objects
-let hidden    = new Set();
-let curYear   = new Date().getFullYear();
-let curMonth  = new Date().getMonth();
-let calView   = 'month';
-let fType     = '';
-let fCohort   = '';
-let fRegion   = '';
-let loadState = {}; // typeKey → 'loading' | 'ok' | 'err'
+/* ═══ STATE ═══ */
+let store={};let hidden=new Set();
+let curYear=new Date().getFullYear(),curMonth=new Date().getMonth(),curDay=new Date().getDate();
+let calView='month';
+let fType='',fCohort='',fRegion='';
+let loadState={};
+const HOUR_PX=48;
 
-/* ══════════════════════════════════════════════════════
-   DATE UTILS
-   ══════════════════════════════════════════════════════ */
-function parseDate(raw) {
-  if (!raw) return null;
-  const s = raw.toString().trim().replace(/\s/g, '');
-  let m;
-  // DD/MM/YYYY or DD-MM-YYYY
-  m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
-  if (m) { const y = +m[3]<100?2000+ +m[3]:+m[3]; return new Date(y, +m[2]-1, +m[1]); }
-  // YYYY-MM-DD
-  m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
-  const d = new Date(raw); return isNaN(d)?null:d;
+/* ═══ DATE UTILS ═══ */
+function parseDate(r){
+  if(!r)return null;const s=r.toString().trim().replace(/\s/g,'');
+  let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if(m){const y=+m[3]<100?2000+ +m[3]:+m[3];return new Date(y,+m[2]-1,+m[1]);}
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  const d=new Date(r);return isNaN(d)?null:d;
 }
-function fmt(d) {
-  if (!d) return '—';
-  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+function parseTime(r){if(!r)return null;const m=r.toString().match(/(\d{1,2}):(\d{2})/);return m?{h:+m[1],m:+m[2]}:null;}
+function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function fmt(d,o){if(!d)return'—';return d.toLocaleDateString('en-GB',o||{day:'2-digit',month:'short',year:'numeric'});}
+function dayAbbr(d){return d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase();}
+
+/* ═══ CSV ═══ */
+function csvToObjs(text){
+  const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  const parse=l=>{const c=[];let cur='',q=false;for(const ch of l){if(ch==='"'){q=!q;}else if(ch===','&&!q){c.push(cur.trim());cur='';}else{cur+=ch;}}c.push(cur.trim());return c;};
+  const rows=lines.map(parse).filter(r=>r.some(c=>c));
+  if(rows.length<2)return[];
+  const h=rows[0].map(x=>x.trim());
+  return rows.slice(1).map(r=>{const o={};h.forEach((k,i)=>{o[k]=(r[i]||'').trim();});return o;}).filter(o=>Object.values(o).some(v=>v));
 }
 
-/* ══════════════════════════════════════════════════════
-   CSV PARSER
-   ══════════════════════════════════════════════════════ */
-function parseCSV(text) {
-  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
-  return lines.map(line => {
-    const cells=[]; let cur='', inQ=false;
-    for (const ch of line) {
-      if (ch==='"') { inQ=!inQ; }
-      else if (ch===',' && !inQ) { cells.push(cur.trim()); cur=''; }
-      else { cur+=ch; }
-    }
-    cells.push(cur.trim());
-    return cells;
-  });
+/* ═══ FETCH ═══ */
+async function fetchSheet(k){
+  try{
+    const res=await fetch(SHEETS[k].url+'&t='+Date.now());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    if(text.includes('<!DOCTYPE'))throw new Error('Not CSV');
+    store[k]=csvToObjs(text);loadState[k]='ok';
+  }catch(e){console.warn(k,e);store[k]=store[k]||[];loadState[k]='err';}
 }
-
-function csvToObjects(text) {
-  const rows = parseCSV(text).filter(r=>r.some(c=>c));
-  if (rows.length < 2) return [];
-  const headers = rows[0].map(h=>h.trim());
-  return rows.slice(1).map(r => {
-    const obj={};
-    headers.forEach((h,i) => { obj[h] = (r[i]||'').trim(); });
-    return obj;
-  }).filter(o => Object.values(o).some(v=>v));
-}
-
-/* ══════════════════════════════════════════════════════
-   FETCH ALL SHEETS
-   ══════════════════════════════════════════════════════ */
-async function fetchSheet(key) {
-  const def = SHEETS[key];
-  loadState[key] = 'loading';
-  updateStatus();
-  try {
-    const res = await fetch(def.url + '&t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    if (text.includes('<!DOCTYPE') || text.includes('<html')) throw new Error('Not published as CSV');
-    store[key] = csvToObjects(text);
-    loadState[key] = 'ok';
-  } catch(e) {
-    console.warn(key, e);
-    store[key] = store[key] || [];
-    loadState[key] = 'err';
-  }
-}
-
-async function loadAll() {
-  const btn = document.getElementById('refreshBtn');
-  btn.classList.add('spinning');
-  document.getElementById('statusTag').textContent = 'Fetching…';
-  document.getElementById('statusTag').className = 'status-tag';
-
-  await Promise.all(Object.keys(SHEETS).map(k => fetchSheet(k)));
-
-  populateFilters();
-  renderAll();
-
-  const errKeys = Object.keys(loadState).filter(k=>loadState[k]==='err');
-  if (errKeys.length) {
-    document.getElementById('statusTag').textContent = `⚠ ${errKeys.map(k=>SHEETS[k].label).join(', ')} failed`;
-    document.getElementById('statusTag').className = 'status-tag err';
-  } else {
-    const total = Object.values(store).reduce((s,a)=>s+a.length,0);
-    const t = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('statusTag').textContent = `${total} events · updated ${t}`;
-    document.getElementById('statusTag').className = 'status-tag ok';
-    document.getElementById('luTime').textContent = new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  }
+async function loadAll(){
+  const btn=document.getElementById('refreshBtn');btn.classList.add('spinning');
+  setStatus('Fetching…','');
+  await Promise.all(Object.keys(SHEETS).map(k=>fetchSheet(k)));
+  populateFilters();renderAll();
+  const errs=Object.keys(loadState).filter(k=>loadState[k]==='err');
+  const tot=Object.values(store).reduce((s,a)=>s+a.length,0);
+  const t=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  if(errs.length)setStatus('⚠ '+errs.map(k=>SHEETS[k].label).join(', '),'err');
+  else{setStatus(tot+' rows · '+t,'ok');document.getElementById('luTime').textContent=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
   btn.classList.remove('spinning');
 }
+function setStatus(msg,cls){const el=document.getElementById('statusPill');el.textContent=msg;el.className='status-pill'+(cls?' '+cls:'');}
 
-function updateStatus() {
-  const loading = Object.values(loadState).filter(s=>s==='loading').length;
-  if (loading) document.getElementById('statusTag').textContent = `Loading ${loading} sheets…`;
-}
-
-/* ══════════════════════════════════════════════════════
-   FLAT EVENTS
-   ══════════════════════════════════════════════════════ */
-function allEvents() {
-  const out = [];
-  Object.keys(SHEETS).forEach(k => {
-    if (hidden.has(k)) return;
-    const def = SHEETS[k];
-    (store[k]||[]).forEach(row => {
-      const d = parseDate(row[def.dateField]);
-      const title = row[def.titleField] || def.label;
-      out.push({ key:k, cls:def.cls, label:def.label, title, date:d, row });
+/* ═══ EXPLODE ROWS ═══ */
+function explodeRow(k,row){
+  const def=SHEETS[k];const evs=[];
+  if(def.subEvents){
+    def.subEvents.forEach(sub=>{
+      const d=parseDate(row[sub.field]);if(!d)return;
+      const base=row[def.titleBase]||def.label;
+      const timeRaw=row['Start Time (IST HH:MM:SS)']||row['Timings (IST)']||null;
+      evs.push({k,parentCls:def.cls,cls:sub.cls,label:def.label,subLabel:sub.label,
+        title:`${base} · ${sub.label}`,shortTitle:sub.label,date:d,row,timeRaw});
     });
-  });
+  }else{
+    const d=parseDate(row[def.dateField]);if(!d)return;
+    const timeRaw=row['Start Time (IST HH:MM:SS)']||row['Timings (IST)']||null;
+    evs.push({k,parentCls:def.cls,cls:def.cls,label:def.label,subLabel:null,
+      title:row[def.titleField]||def.label,shortTitle:row[def.titleField]||def.label,date:d,row,timeRaw});
+  }
+  return evs;
+}
+function allEvents(){
+  const out=[];
+  Object.keys(SHEETS).forEach(k=>{if(hidden.has(k))return;(store[k]||[]).forEach(row=>(explodeRow(k,row)||[]).forEach(e=>out.push(e)));});
   return out;
 }
-
-function filteredEvents() {
-  return allEvents().filter(e => {
-    if (fType && e.key !== fType) return false;
-    if (fCohort && (e.row['Cohort']||'') !== fCohort) return false;
-    if (fRegion && (e.row['Region/Country']||e.row['Region']||e.row['Country']||'') !== fRegion) return false;
+function filteredEvents(){
+  return allEvents().filter(e=>{
+    if(fType&&e.k!==fType)return false;
+    if(fCohort&&(e.row['Cohort']||'')!==fCohort)return false;
+    if(fRegion&&(e.row['Region/Country']||e.row['Region']||e.row['Country']||'')!==fRegion)return false;
     return true;
   });
 }
 
-/* ══════════════════════════════════════════════════════
-   POPULATE FILTERS
-   ══════════════════════════════════════════════════════ */
-function populateFilters() {
-  const cohorts = [...new Set(Object.values(store).flat().map(r=>r['Cohort']).filter(Boolean))].sort();
-  const regions = [...new Set(Object.values(store).flat().map(r=>r['Region/Country']||r['Region']||r['Country']||'').filter(Boolean))].sort();
-
-  function fill(id, arr, cur) {
-    const sel = document.getElementById(id);
-    sel.innerHTML = sel.options[0].outerHTML + arr.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');
-  }
-  fill('fCohort', cohorts, fCohort);
-  fill('fRegion', regions, fRegion);
+/* ═══ FILTERS ═══ */
+function populateFilters(){
+  const rows=Object.values(store).flat();
+  const cohorts=[...new Set(rows.map(r=>r['Cohort']).filter(Boolean))].sort();
+  const regions=[...new Set(rows.map(r=>r['Region/Country']||r['Region']||r['Country']||'').filter(Boolean))].sort();
+  function fill(id,arr,cur){const s=document.getElementById(id);s.innerHTML=s.options[0].outerHTML+arr.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');}
+  fill('fCohort',cohorts,fCohort);fill('fRegion',regions,fRegion);
 }
 
-/* ══════════════════════════════════════════════════════
-   STATS
-   ══════════════════════════════════════════════════════ */
-function renderStats() {
-  const total = Object.values(store).reduce((s,a)=>s+a.length,0);
-  document.getElementById('statsBar').innerHTML = [
-    {lbl:'Total', val:total, color:''},
-    ...Object.keys(SHEETS).map(k=>({lbl:SHEETS[k].label, val:(store[k]||[]).length, color:`var(--${SHEETS[k].cls}-fg)`}))
-  ].map(s=>`<div class="stat">
-    <div class="stat-lbl">${s.lbl}</div>
-    <div class="stat-val" style="color:${s.color||'var(--text)'}">${s.val}</div>
-  </div>`).join('');
+/* ═══ STATS ═══ */
+function renderStats(){
+  const tot=Object.values(store).reduce((s,a)=>s+a.length,0);
+  document.getElementById('statsBar').innerHTML=[
+    {lbl:'Total',val:tot,c:''},
+    ...Object.keys(SHEETS).map(k=>({lbl:SHEETS[k].label,val:(store[k]||[]).length,c:`var(--${SHEETS[k].cls}-c)`}))
+  ].map(s=>`<div class="stat"><div class="stat-lbl">${s.lbl}</div><div class="stat-val" style="color:${s.c||'var(--text)'}">${s.val}</div></div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════════
-   LEGEND
-   ══════════════════════════════════════════════════════ */
-function renderLegend() {
-  document.getElementById('legend').innerHTML = Object.keys(SHEETS).map(k => {
-    const s = SHEETS[k];
-    return `<div class="leg${hidden.has(k)?' off':''}" onclick="toggleHide('${k}')">
-      <div class="leg-dot" style="background:var(--${s.cls}-dot)"></div>
-      ${s.label}
-    </div>`;
-  }).join('');
+/* ═══ LEGEND ═══ */
+function renderLegend(){
+  const html=Object.keys(SHEETS).map(k=>`<div class="leg${hidden.has(k)?' off':''}" onclick="toggleHide('${k}')"><div class="leg-dot" style="background:var(--${SHEETS[k].cls}-c)"></div>${SHEETS[k].label}</div>`).join('');
+  document.querySelectorAll('.legend').forEach(el=>el.innerHTML=html);
 }
-function toggleHide(k) {
-  hidden.has(k) ? hidden.delete(k) : hidden.add(k);
-  renderLegend(); renderCalendar(); renderList();
+function toggleHide(k){hidden.has(k)?hidden.delete(k):hidden.add(k);renderLegend();renderView();}
+
+/* ═══ CHIP ═══ */
+function chipHtml(ev){
+  const def=SHEETS[ev.k];
+  const tags=(def.chipTags||[]).map(f=>ev.row[f]).filter(Boolean).map(v=>`<span class="ctag ${ev.cls}">${v}</span>`).join('');
+  const data=eData(ev);
+  return `<span class="chip ${ev.cls}" onclick="showModal('${data}')" title="${ev.title}"><div class="chip-r1">${ev.shortTitle}</div>${tags?`<div class="chip-r2">${tags}</div>`:''}</span>`;
 }
+function eData(ev){return encodeURIComponent(JSON.stringify({k:ev.k,row:ev.row,subLabel:ev.subLabel}));}
 
-/* ══════════════════════════════════════════════════════
-   CHIP RENDERING
-   ══════════════════════════════════════════════════════ */
-function makeChip(ev) {
-  const def = SHEETS[ev.key];
-  const tags = def.chipTags
-    .map(f => ev.row[f])
-    .filter(Boolean)
-    .map(v => `<span class="chip-tag ${ev.cls}">${v}</span>`)
-    .join('');
-  const data = encodeURIComponent(JSON.stringify({key:ev.key, row:ev.row}));
-  return `<span class="chip ${ev.cls}" onclick="showModal('${data}')" title="${ev.title}">
-    <div class="chip-title">${ev.title}</div>
-    ${tags ? `<div class="chip-attrs">${tags}</div>` : ''}
-  </span>`;
-}
-
-/* ══════════════════════════════════════════════════════
-   CALENDAR
-   ══════════════════════════════════════════════════════ */
-function renderCalendar() {
-  const d1 = new Date(curYear, curMonth, 1);
-  document.getElementById('monthLabel').textContent =
-    d1.toLocaleString('default',{month:'long',year:'numeric'});
-
-  const daysInMonth = new Date(curYear,curMonth+1,0).getDate();
-  const prevDays    = new Date(curYear,curMonth,0).getDate();
-  const firstDay    = d1.getDay();
-  const today       = new Date();
-
-  const evts = filteredEvents().filter(e=>e.date);
-  const evMap = {};
-  evts.forEach(e => {
-    const k = `${e.date.getFullYear()}-${e.date.getMonth()}-${e.date.getDate()}`;
-    (evMap[k]=evMap[k]||[]).push(e);
-  });
-
-  const cells = [];
-  for (let i=firstDay-1;i>=0;i--) cells.push({d:prevDays-i,cur:false});
-  for (let d=1;d<=daysInMonth;d++) cells.push({d,cur:true});
-  const rem = 42-cells.length;
-  for (let d=1;d<=rem;d++) cells.push({d,cur:false});
-
-  document.getElementById('calGrid').innerHTML = cells.map(({d,cur})=>{
-    const isToday = cur && d===today.getDate() && curMonth===today.getMonth() && curYear===today.getFullYear();
-    let inner = '';
-    if (cur) {
-      const key = `${curYear}-${curMonth}-${d}`;
-      const dayEvs = evMap[key]||[];
-      // show up to 3 chips, then +N more
-      dayEvs.slice(0,3).forEach(e => { inner += makeChip(e); });
-      if (dayEvs.length>3) inner += `<span class="more-lbl">+${dayEvs.length-3} more</span>`;
-      // show skeleton if still loading
-      if (!inner && Object.values(loadState).some(s=>s==='loading')) {
-        inner = '<div class="skel" style="width:80%"></div>';
-      }
-    }
-    return `<div class="day${cur?'':' other'}${isToday?' today':''}">
+/* ═══ MONTHLY ═══ */
+function renderMonthly(){
+  const d1=new Date(curYear,curMonth,1);
+  document.getElementById('monthLabel').textContent=d1.toLocaleString('default',{month:'long',year:'numeric'});
+  const dim=new Date(curYear,curMonth+1,0).getDate(),prev=new Date(curYear,curMonth,0).getDate(),fd=d1.getDay(),tod=new Date();
+  const evts=filteredEvents().filter(e=>e.date);
+  const evMap={};evts.forEach(e=>{const k=`${e.date.getFullYear()}-${e.date.getMonth()}-${e.date.getDate()}`;(evMap[k]=evMap[k]||[]).push(e);});
+  const cells=[];
+  for(let i=fd-1;i>=0;i--)cells.push({d:prev-i,cur:false});
+  for(let d=1;d<=dim;d++)cells.push({d,cur:true});
+  const rem=42-cells.length;for(let d=1;d<=rem;d++)cells.push({d,cur:false});
+  document.getElementById('calGrid').innerHTML=cells.map(({d,cur})=>{
+    const isT=cur&&d===tod.getDate()&&curMonth===tod.getMonth()&&curYear===tod.getFullYear();
+    const isSel=cur&&d===curDay&&curMonth===new Date().getMonth()&&curYear===new Date().getFullYear();
+    let inner='';
+    if(cur){const key=`${curYear}-${curMonth}-${d}`;const dayEvs=evMap[key]||[];dayEvs.slice(0,4).forEach(e=>{inner+=chipHtml(e);});if(dayEvs.length>4)inner+=`<span class="more-lbl">+${dayEvs.length-4} more</span>`;}
+    return `<div class="mday${cur?'':' other'}${isT?' today':''}${isSel&&calView!='month'?' cur-day-sel':''}" ${cur?`onclick="dayClick(${curYear},${curMonth},${d})"`:''}>
       <div class="dnum">${d}</div>${inner}
     </div>`;
   }).join('');
 }
+function dayClick(y,m,d){curYear=y;curMonth=m;curDay=d;switchView('day');}
 
-function changeMonth(d) {
-  curMonth+=d;
-  if(curMonth>11){curMonth=0;curYear++;}
-  if(curMonth<0){curMonth=11;curYear--;}
-  renderCalendar();
+/* ═══ TIME GRID ═══ */
+function buildTimeGrid(days){
+  const tod=new Date();
+  const evts=filteredEvents().filter(e=>e.date);
+  const evMap={};evts.forEach(e=>{const k=dayKey(e.date);(evMap[k]=evMap[k]||[]).push(e);});
+  function dayKey(d){return`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;}
+
+  /* header */
+  const headDays=days.map(d=>{
+    const it=sameDay(d,tod);
+    return `<div class="tg-day-hd${it?' is-today':''}"><span class="tg-day-name">${dayAbbr(d)}</span><span class="tg-day-num">${d.getDate()}</span></div>`;
+  }).join('');
+
+  /* all-day bar */
+  const adCols=days.map(d=>{
+    const evs=(evMap[dayKey(d)]||[]).filter(e=>!parseTime(e.timeRaw));
+    return`<div class="allday-col">${evs.map(e=>{
+      const data=eData(e);
+      return`<span class="allday-chip ${e.cls}" onclick="showModal('${data}')" title="${e.title}">${e.shortTitle}</span>`;
+    }).join('')}</div>`;
+  }).join('');
+
+  /* body cols */
+  const hours=Array.from({length:24},(_,i)=>i);
+  const bodyCols=days.map(d=>{
+    const it=sameDay(d,tod);
+    const tevs=(evMap[dayKey(d)]||[]).filter(e=>parseTime(e.timeRaw));
+    const hourRows=hours.map(h=>`<div class="tg-hour"><div class="tg-half"></div></div>`).join('');
+    // group by hour to offset overlaps
+    const byHour={};tevs.forEach(e=>{const t=parseTime(e.timeRaw);const hk=t.h;(byHour[hk]=byHour[hk]||[]).push(e);});
+    const tevHtml=tevs.map(e=>{
+      const t=parseTime(e.timeRaw);
+      const top=(t.h*60+t.m)/60*HOUR_PX;
+      const hEvs=byHour[t.h]||[];const idx=hEvs.indexOf(e);const w=Math.floor(100/hEvs.length);
+      const left=idx*w;const right=100-(idx+1)*w;
+      const def=SHEETS[e.k];
+      const tags=(def.chipTags||[]).map(f=>e.row[f]).filter(Boolean).map(v=>`<span class="ctag ${e.cls}">${v}</span>`).join('');
+      const data=eData(e);
+      return`<div class="tev ${e.cls}" style="top:${top}px;height:${HOUR_PX-3}px;left:${left+1}%;right:${right+1}%" onclick="showModal('${data}')">
+        <div class="tev-title">${e.shortTitle}</div>
+        <div class="tev-time">${e.timeRaw||''}</div>
+        <div class="tev-ctags">${tags}</div>
+      </div>`;
+    }).join('');
+    const nowH=it?`<div class="now-bar" id="nowBar" style="top:${(tod.getHours()*60+tod.getMinutes())/60*HOUR_PX}px"></div>`:'';
+    return`<div class="tg-day-col${it?' is-today':''}">${hourRows}${tevHtml}${nowH}</div>`;
+  }).join('');
+
+  const timeLbls=hours.map(h=>`<div class="tg-time-cell">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>`).join('');
+
+  return`<div class="tg-shell">
+    <div class="tg-head"><div class="tg-head-spacer"></div><div class="tg-head-days">${headDays}</div></div>
+    <div class="allday-bar"><div class="allday-lbl">ALL DAY</div><div class="allday-cols">${adCols}</div></div>
+    <div class="tg-body" id="tgBody">
+      <div class="tg-time-col">${timeLbls}</div>
+      <div class="tg-days">${bodyCols}</div>
+    </div>
+  </div>`;
 }
 
-/* ══════════════════════════════════════════════════════
-   LIST VIEW
-   ══════════════════════════════════════════════════════ */
-function renderList() {
-  const evts = filteredEvents().slice().sort((a,b)=>{
-    if(!a.date) return 1; if(!b.date) return -1; return a.date-b.date;
-  });
-  if (!evts.length) {
-    document.getElementById('listBody').innerHTML =
-      `<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--muted)">No events found.</td></tr>`;
-    return;
-  }
-  document.getElementById('listBody').innerHTML = evts.map(ev => {
-    const def = SHEETS[ev.key];
-    const tags = def.chipTags.map(f=>ev.row[f]).filter(Boolean)
-      .map(v=>`<span class="attr-tag ${ev.cls}">${v}</span>`).join('');
-    const data = encodeURIComponent(JSON.stringify({key:ev.key,row:ev.row}));
-    const region = ev.row['Region/Country']||ev.row['Region']||ev.row['Country']||'—';
-    const detail = def.chipTags.map(f=>ev.row[f]).filter(Boolean).join(' · ')||'—';
-    return `<tr onclick="showModal('${data}')">
+function scrollToNow(){requestAnimationFrame(()=>{const b=document.getElementById('tgBody');if(b)b.scrollTop=Math.max(0,(new Date().getHours()-1)*HOUR_PX);});}
+
+/* ═══ WEEK ═══ */
+function renderWeek(){
+  const d=new Date(curYear,curMonth,curDay);
+  const dow=d.getDay();
+  const days=Array.from({length:7},(_,i)=>new Date(curYear,curMonth,curDay-dow+i));
+  const s=days[0],e=days[6];
+  document.getElementById('weekLabel').textContent=`${fmt(s,{day:'2-digit',month:'short'})} – ${fmt(e,{day:'2-digit',month:'short',year:'numeric'})}`;
+  document.getElementById('weekGrid').innerHTML=buildTimeGrid(days);
+  scrollToNow();
+  startNowTick();
+}
+
+/* ═══ DAY ═══ */
+function renderDay(){
+  const d=new Date(curYear,curMonth,curDay);
+  document.getElementById('dayLabel').textContent=fmt(d,{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('dayGrid').innerHTML=buildTimeGrid([d]);
+  scrollToNow();
+  startNowTick();
+}
+
+let nowTickStarted=false;
+function startNowTick(){
+  if(nowTickStarted)return;nowTickStarted=true;
+  setInterval(()=>{
+    const nb=document.getElementById('nowBar');
+    if(nb){const n=new Date();nb.style.top=(n.getHours()*60+n.getMinutes())/60*HOUR_PX+'px';}
+  },60000);
+}
+
+/* ═══ LIST ═══ */
+function renderList(){
+  const evts=filteredEvents().slice().sort((a,b)=>(!a.date?1:!b.date?-1:a.date-b.date));
+  if(!evts.length){document.getElementById('listBody').innerHTML='<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--muted)">No events found.</td></tr>';return;}
+  document.getElementById('listBody').innerHTML=evts.map(ev=>{
+    const def=SHEETS[ev.k];
+    const tags=(def.chipTags||[]).map(f=>ev.row[f]).filter(Boolean).map(v=>`<span class="attr-tag ${ev.cls}">${v}</span>`).join(' ');
+    const data=eData(ev);
+    const region=ev.row['Region/Country']||ev.row['Region']||ev.row['Country']||'—';
+    return`<tr onclick="showModal('${data}')">
       <td class="dmono">${fmt(ev.date)}</td>
-      <td><span class="badge ${ev.cls}"><span class="bdot" style="background:var(--${ev.cls}-dot)"></span>${ev.label}</span></td>
+      <td><span class="badge ${ev.cls}"><span class="bdot" style="background:var(--${ev.cls}-c)"></span>${ev.label}${ev.subLabel?` · ${ev.subLabel}`:''}</span></td>
       <td>${ev.title}</td>
-      <td><div class="attr-tags">${tags||'—'}</div></td>
-      <td style="color:var(--muted);font-size:12px">${region}</td>
-      <td style="color:var(--muted);font-size:12px">${ev.row['Timings (IST)']||ev.row['Start Time (IST HH:MM:SS)']||''}</td>
+      <td>${tags||'—'}</td>
+      <td style="color:var(--muted);font-size:11.5px">${region}</td>
+      <td style="color:var(--muted);font-size:11px;font-family:var(--mono)">${ev.row['Start Time (IST HH:MM:SS)']||ev.row['Timings (IST)']||''}</td>
     </tr>`;
   }).join('');
 }
 
-/* ══════════════════════════════════════════════════════
-   MODAL
-   ══════════════════════════════════════════════════════ */
-function showModal(encoded) {
-  const {key, row} = JSON.parse(decodeURIComponent(encoded));
-  const def = SHEETS[key];
-  const rows = def.modalFields
-    .filter(f => row[f])
-    .map(f => `<div class="mrow"><span class="mlabel">${f}</span><span>${row[f]}</span></div>`)
-    .join('');
-  document.getElementById('modal').innerHTML = `
-    <div class="modal-hd">
-      <div class="modal-hd-left">
-        <span class="badge ${def.cls}"><span class="bdot" style="background:var(--${def.cls}-dot)"></span>${def.label}</span>
-        <div class="modal-title">${row[def.titleField]||def.label}</div>
-      </div>
-      <button class="close-btn" onclick="closeModal()">✕</button>
-    </div>
-    ${rows}`;
-  const ov = document.getElementById('overlay');
-  ov.style.display='flex';
-  requestAnimationFrame(()=>ov.classList.add('open'));
+/* ═══ MODAL ═══ */
+function showModal(encoded){
+  const {k,row,subLabel}=JSON.parse(decodeURIComponent(encoded));
+  const def=SHEETS[k];
+  const title=subLabel?`${row[def.titleBase||def.chipTags?.[0]]||def.label} · ${subLabel}`:row[def.titleField||def.chipTags?.[0]]||def.label;
+  const rows=def.modalFields.filter(f=>row[f]).map(f=>`<div class="mrow"><span class="mlabel">${f}</span><span>${row[f]}</span></div>`).join('');
+  document.getElementById('modal').innerHTML=`<div class="modal-hd"><div><span class="badge ${def.cls}"><span class="bdot" style="background:var(--${def.cls}-c)"></span>${def.label}</span><div class="modal-title">${title}</div></div><button class="close-btn" onclick="closeModal()">✕</button></div>${rows}`;
+  const ov=document.getElementById('overlay');ov.style.display='flex';requestAnimationFrame(()=>ov.classList.add('open'));
 }
-function closeModal() {
-  const ov=document.getElementById('overlay');
-  ov.classList.remove('open');
-  setTimeout(()=>{ov.style.display='none'},200);
-}
+function closeModal(){const ov=document.getElementById('overlay');ov.classList.remove('open');setTimeout(()=>{ov.style.display='none';},200);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-/* ══════════════════════════════════════════════════════
-   VIEW SWITCH
-   ══════════════════════════════════════════════════════ */
-function switchView(v) {
+/* ═══ VIEW SWITCH ═══ */
+function switchView(v){
   calView=v;
   document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.vbtn[data-v="${v}"]`).classList.add('active');
-  document.getElementById('monthView').style.display = v==='month'?'':'none';
-  document.getElementById('listView').style.display  = v==='list'?'':'none';
-  if(v==='month') renderCalendar(); else renderList();
+  ['monthView','weekView','dayView','listView'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(v+'View').style.display='';
+  renderView();
+}
+function renderView(){
+  if(calView==='month')renderMonthly();
+  else if(calView==='week')renderWeek();
+  else if(calView==='day')renderDay();
+  else renderList();
 }
 
-/* ══════════════════════════════════════════════════════
-   RENDER ALL
-   ══════════════════════════════════════════════════════ */
-function renderAll() {
-  renderStats(); renderLegend(); renderCalendar(); renderList();
+/* ═══ NAVIGATION ═══ */
+function navPrev(){
+  if(calView==='month'){curMonth--;if(curMonth<0){curMonth=11;curYear--;}}
+  else if(calView==='week'){const d=new Date(curYear,curMonth,curDay-7);curYear=d.getFullYear();curMonth=d.getMonth();curDay=d.getDate();}
+  else if(calView==='day'){const d=new Date(curYear,curMonth,curDay-1);curYear=d.getFullYear();curMonth=d.getMonth();curDay=d.getDate();}
+  renderView();
 }
+function navNext(){
+  if(calView==='month'){curMonth++;if(curMonth>11){curMonth=0;curYear++;}}
+  else if(calView==='week'){const d=new Date(curYear,curMonth,curDay+7);curYear=d.getFullYear();curMonth=d.getMonth();curDay=d.getDate();}
+  else if(calView==='day'){const d=new Date(curYear,curMonth,curDay+1);curYear=d.getFullYear();curMonth=d.getMonth();curDay=d.getDate();}
+  renderView();
+}
+function goToday(){const t=new Date();curYear=t.getFullYear();curMonth=t.getMonth();curDay=t.getDate();renderView();}
+function renderAll(){renderStats();renderLegend();renderView();}
 
-/* ── Boot ── */
+/* ─── Boot ─── */
 Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
 </script>
 
-<!-- ═══════════ HTML ═══════════ -->
-
+<!-- HTML -->
 <div class="topbar">
   <div>
-    <h1>Events Calendar</h1>
-    <p>Live from Google Sheets · auto-updates on refresh</p>
+    <h1><span class="dot"></span>Events Calendar</h1>
+    <p>Live from Google Sheets · updates on refresh</p>
   </div>
   <div class="topbar-right">
-    <span class="status-tag" id="statusTag">—</span>
+    <span class="status-pill" id="statusPill">—</span>
+    <button class="btn btn-today" onclick="goToday()">Today</button>
     <div class="vtoggle">
-      <button class="vbtn active" data-v="month" onclick="switchView('month')">Monthly</button>
+      <button class="vbtn active" data-v="month" onclick="switchView('month')">Month</button>
+      <button class="vbtn" data-v="week" onclick="switchView('week')">Week</button>
+      <button class="vbtn" data-v="day" onclick="switchView('day')">Day</button>
       <button class="vbtn" data-v="list" onclick="switchView('list')">List</button>
     </div>
     <button class="btn" id="refreshBtn" onclick="loadAll()">
@@ -595,65 +608,69 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
 <div class="stats" id="statsBar"></div>
 
 <div class="filters">
-  <select class="fsel" id="fType" onchange="fType=this.value;renderCalendar();renderList()">
+  <select class="fsel" id="fType" onchange="fType=this.value;renderView()">
     <option value="">All event types</option>
     <script>document.write(Object.keys(SHEETS).map(k=>`<option value="${k}">${SHEETS[k].label}</option>`).join(''));</script>
   </select>
-  <select class="fsel" id="fCohort" onchange="fCohort=this.value;renderCalendar();renderList()">
-    <option value="">All cohorts</option>
-  </select>
-  <select class="fsel" id="fRegion" onchange="fRegion=this.value;renderCalendar();renderList()">
-    <option value="">All regions</option>
-  </select>
+  <select class="fsel" id="fCohort" onchange="fCohort=this.value;renderView()"><option value="">All cohorts</option></select>
+  <select class="fsel" id="fRegion" onchange="fRegion=this.value;renderView()"><option value="">All regions</option></select>
 </div>
 
-<!-- Monthly -->
+<!-- MONTH -->
 <div id="monthView">
-  <div class="mnav">
-    <button class="nbtn" onclick="changeMonth(-1)"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+  <div class="nav-row">
+    <button class="nbtn" onclick="navPrev()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
     <h2 id="monthLabel"></h2>
-    <button class="nbtn" onclick="changeMonth(1)"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+    <button class="nbtn" onclick="navNext()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
   </div>
-  <div class="legend" id="legend"></div>
-  <div class="cal-head">
-    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-  </div>
+  <div class="legend"></div>
+  <div class="cal-head-row"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
   <div class="cal-grid" id="calGrid"></div>
 </div>
 
-<!-- List -->
+<!-- WEEK -->
+<div id="weekView" style="display:none">
+  <div class="nav-row">
+    <button class="nbtn" onclick="navPrev()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+    <h2 id="weekLabel"></h2>
+    <button class="nbtn" onclick="navNext()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="legend"></div>
+  <div id="weekGrid"></div>
+</div>
+
+<!-- DAY -->
+<div id="dayView" style="display:none">
+  <div class="nav-row">
+    <button class="nbtn" onclick="navPrev()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+    <h2 id="dayLabel" style="min-width:260px"></h2>
+    <button class="nbtn" onclick="navNext()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="legend"></div>
+  <div id="dayGrid"></div>
+</div>
+
+<!-- LIST -->
 <div id="listView" style="display:none">
-  <div class="list-wrap">
+  <div class="list-scroll">
     <table class="ltbl">
-      <thead><tr>
-        <th>Date</th><th>Type</th><th>Name / Program</th><th>Attributes</th><th>Region</th><th>Time (IST)</th>
-      </tr></thead>
+      <thead><tr><th>Date</th><th>Type</th><th>Event</th><th>Attributes</th><th>Region</th><th>Time (IST)</th></tr></thead>
       <tbody id="listBody"></tbody>
     </table>
   </div>
 </div>
 
-<!-- Footer info bar -->
 <div class="lu-bar">
   <span>Last refreshed: <strong id="luTime">—</strong></span>
   <div class="src-links">
-    <script>document.write(Object.keys(SHEETS).map(k=>`
-      <a class="src-link" href="${SHEETS[k].url}" target="_blank">
-        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        ${SHEETS[k].label}
-      </a>`).join(''));</script>
+    <script>document.write(Object.keys(SHEETS).map(k=>`<a class="src-link" href="${SHEETS[k].url}" target="_blank"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>${SHEETS[k].label}</a>`).join(''));</script>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="overlay" id="overlay" style="display:none" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modal"></div>
-</div>
-
+<div class="overlay" id="overlay" style="display:none" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── Initial render then fetch ── */
 renderAll();
 loadAll();
 </script>

@@ -33,6 +33,12 @@
   --term-c:#4CC9E9;   --term-bg:rgba(76,201,233,.11);   --term-bdr:rgba(76,201,233,.3);
   --online-c:#009C50; --online-bg:rgba(0,156,80,.11);   --online-bdr:rgba(0,156,80,.3);
   --offline-c:#9C2AB5;--offline-bg:rgba(156,42,181,.11);--offline-bdr:rgba(156,42,181,.3);
+  /* MOFU Online — lime green */
+  --mofu_on-c:#a3e635; --mofu_on-bg:rgba(163,230,53,.11); --mofu_on-bdr:rgba(163,230,53,.28);
+  /* BOFU Offline — coral/orange */
+  --bofu_off-c:#fb923c; --bofu_off-bg:rgba(251,146,60,.12); --bofu_off-bdr:rgba(251,146,60,.28);
+  /* MOFU Offline — teal */
+  --mofu_off-c:#2dd4bf; --mofu_off-bg:rgba(45,212,191,.12); --mofu_off-bdr:rgba(45,212,191,.28);
 
   /* fee sub-shades */
   --fee1-c:#F0C300; --fee2-c:#d4a800; --fee3-c:#b88f00; --fee4-c:#9c7800; --feed-c:#e05a00;
@@ -132,6 +138,9 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .chip.classes,.tev.classes,.allday-chip.classes,.badge.classes,.ctag.classes{background:rgba(26,157,184,.1);color:var(--classes-c);border-color:var(--classes-c)}
 .chip.online,.tev.online,.allday-chip.online,.badge.online,.ctag.online    {background:var(--online-bg);color:var(--online-c);border-color:var(--online-c)}
 .chip.offline,.tev.offline,.allday-chip.offline,.badge.offline,.ctag.offline{background:var(--offline-bg);color:var(--offline-c);border-color:var(--offline-c)}
+.chip.mofu_on,.tev.mofu_on,.allday-chip.mofu_on,.badge.mofu_on,.ctag.mofu_on{background:var(--mofu_on-bg);color:var(--mofu_on-c);border-color:var(--mofu_on-c)}
+.chip.bofu_off,.tev.bofu_off,.allday-chip.bofu_off,.badge.bofu_off,.ctag.bofu_off{background:var(--bofu_off-bg);color:var(--bofu_off-c);border-color:var(--bofu_off-c)}
+.chip.mofu_off,.tev.mofu_off,.allday-chip.mofu_off,.badge.mofu_off,.ctag.mofu_off{background:var(--mofu_off-bg);color:var(--mofu_off-c);border-color:var(--mofu_off-c)}
 
 /* ══ TIME GRID (week + day) ══ */
 .tg-shell{border:1px solid var(--b1);border-radius:var(--rlg);overflow:hidden;background:var(--s1);display:flex;flex-direction:column}
@@ -304,7 +313,7 @@ const SHEETS = {
      Time field: Timings (IST)                                     */
   mofuOnline: {
     label: 'MOFU Online Events',
-    cls:   'online',
+    cls:   'mofu_on',
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=314712600&single=true&output=csv',
     dateField:  'Date (IST)',
     titleFn:    r => r['Name'] || r['Session Title'] || 'MOFU Online',
@@ -320,13 +329,15 @@ const SHEETS = {
      Chip tags: Region, Country                                    */
   bofuOffline: {
     label: 'BOFU Offline Events',
-    cls:   'offline',
+    cls:   'bofu_off',
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=77530506&single=true&output=csv',
+    // Actual headers: Event Type | City/Country | Date | Time | Region | Calling POC | Tetr POC | Student POC
     dateField:  'Date',
-    titleFn:    r => r['Name of the event'] || r['Name of the Event'] || 'BOFU Offline',
+    titleFn:    r => [r['Event Type'], r['City/Country']].filter(Boolean).join(' · '),
     timeField:  null,
-    chipTags:   ['Region','Country'],
-    modalFields:['Date','Name of the event','City','Region','Country','Month'],
+    chipTags:   ['Event Type','Region','City/Country'],
+    modalFields:['Event Type','City/Country','Date','Time','Region',
+                 'Calling POC','Tetr POC','Student POC'],
   },
 
   /* 6. MOFU Offline Events – B2B
@@ -336,7 +347,7 @@ const SHEETS = {
      Chip tags: Event Type, Region                                 */
   mofuOffline: {
     label: 'MOFU Offline Events',
-    cls:   'offline',
+    cls:   'mofu_off',
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=96818292&single=true&output=csv',
     dateField:  'Date',
     titleFn:    r => [r['Event Type'], r['Location']].filter(Boolean).join(' · '),

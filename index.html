@@ -226,58 +226,125 @@ table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
 <div class="app">
 
 <script>
-/* ═══ SHEET CONFIG ═══ */
+/* ═══ SHEET CONFIG ═══
+   ─────────────────────────────────────────────────────────────────
+   Each entry is one event type. Fields:
+     url         – published CSV link
+     cls         – colour class (fee | app | term | online | offline
+                   | online2 | offline2)
+     dateField   – column that holds the primary calendar date
+     titleFn(row)– function returning the chip title string
+     timeField   – column for IST time (optional; null = all-day)
+     chipTags    – array of column names shown as attribute tags
+     modalFields – all columns shown in the detail modal
+     subEvents   – for types that explode one row → many dated events
+   ─────────────────────────────────────────────────────────────────
+*/
 const SHEETS = {
-  fee: {
-    label:'Fee Deadlines', cls:'fee',
-    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=232696750&single=true&output=csv',
-    subEvents:[
-      {field:'Fee Reminder 1',cls:'fee1',label:'Fee Reminder 1'},
-      {field:'Fee Reminder 2',cls:'fee2',label:'Fee Reminder 2'},
-      {field:'Fee Reminder 3',cls:'fee3',label:'Fee Reminder 3'},
-      {field:'Fee Reminder 4',cls:'fee4',label:'Fee Reminder 4'},
-      {field:'Fee Deadline',  cls:'feed',label:'Fee Deadline'},
+
+  /* 1. Student Deadlines
+     Columns: Program | Round/Cohort | Deadline | Type
+     Calendar event: "<Type> · <Program>" on the Deadline date
+     Chip tags: Type, Program, Round/Cohort                        */
+  studentDeadlines: {
+    label: 'Student Deadlines',
+    cls:   'app',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=224187494&single=true&output=csv',
+    dateField:  'Deadline',
+    titleFn:    r => [r['Type'], r['Program']].filter(Boolean).join(' · '),
+    timeField:  null,
+    chipTags:   ['Type', 'Program', 'Round/ Cohort'],
+    modalFields:['Program','Round/ Cohort','Deadline','Type'],
+  },
+
+  /* 2. Term Durations — unchanged, explodes into 6 sub-events     */
+  term: {
+    label: 'Term Durations',
+    cls:   'term',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=1136162814&single=true&output=csv',
+    subEvents: [
+      {field:'Check-In Start Date',    cls:'checkin', label:'Check-In Start'},
+      {field:'Check-In End Date',      cls:'checkin', label:'Check-In End'},
+      {field:'Orientation Start Date', cls:'orient',  label:'Orientation Start'},
+      {field:'Orientation End Date',   cls:'orient',  label:'Orientation End'},
+      {field:'Classes Start Date',     cls:'classes', label:'Classes Start'},
+      {field:'Classes End Date',       cls:'classes', label:'Classes End'},
     ],
-    chipTags:['Program','Cohort','Term'],
-    titleBase:'Program',
-    modalFields:['Program','Cohort','Term','Fee Reminder 1','Fee Reminder 2','Fee Reminder 3','Fee Reminder 4','Fee Deadline'],
+    chipTags:   ['Program','Cohort','Country'],
+    titleBase:  'Program',
+    modalFields:['Program','Cohort','Term','Country',
+                 'Check-In Start Date','Check-In End Date',
+                 'Orientation Start Date','Orientation End Date',
+                 'Classes Start Date','Classes End Date'],
   },
-  app:{
-    label:'Application Deadlines',cls:'app',
-    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=224187494&single=true&output=csv',
-    dateField:'Application Deadline',titleField:'Program',
-    chipTags:['Program','Round'],
-    modalFields:['Program','Round','Application Deadline'],
+
+  /* 3. BOFU Online Events – Term Zero
+     Columns: Date(col D/IST), Time IST (col E), Status, PG/UG (col F),
+              Batches, Category, Session Title (col H), Main Speaker, Host
+     Calendar event: "<Session Title>" on Date (IST)
+     Chip tags: PG/UG, Category, Main Speaker
+     Time field: "Time (IST)"                                      */
+  bofuOnline: {
+    label: 'BOFU Online Events',
+    cls:   'online',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
+    dateField:  'Date (IST)',
+    titleFn:    r => r['Session Title'] || r['Name of the Event'] || 'BOFU Online',
+    timeField:  'Time (IST)',
+    chipTags:   ['PG/UG','Category','Main Speaker'],
+    modalFields:['Date (IST)','Time (IST)','PG/UG','Batches','Category',
+                 'Session Title','Main Speaker','Host','Status'],
   },
-  term:{
-    label:'Term Durations',cls:'term',
-    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=1136162814&single=true&output=csv',
-    subEvents:[
-      {field:'Check-In Start Date',   cls:'checkin',label:'Check-In Start'},
-      {field:'Check-In End Date',     cls:'checkin',label:'Check-In End'},
-      {field:'Orientation Start Date',cls:'orient', label:'Orientation Start'},
-      {field:'Orientation End Date',  cls:'orient', label:'Orientation End'},
-      {field:'Classes Start Date',    cls:'classes',label:'Classes Start'},
-      {field:'Classes End Date',      cls:'classes',label:'Classes End'},
-    ],
-    chipTags:['Program','Cohort','Country'],
-    titleBase:'Program',
-    modalFields:['Program','Cohort','Term','Country','Check-In Start Date','Check-In End Date','Orientation Start Date','Orientation End Date','Classes Start Date','Classes End Date'],
+
+  /* 4. MOFU Online Events
+     Columns incl: Date (IST) = col G, Timings (IST) = col F, Name = col M
+     Calendar event: "<Name>" (col M) on Date IST (col G)
+     Chip tags: Cohort, Region
+     Time field: Timings (IST)                                     */
+  mofuOnline: {
+    label: 'MOFU Online Events',
+    cls:   'online',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=314712600&single=true&output=csv',
+    dateField:  'Date (IST)',
+    titleFn:    r => r['Name'] || r['Session Title'] || 'MOFU Online',
+    timeField:  'Timings (IST)',
+    chipTags:   ['Cohort','Region'],
+    modalFields:['Date (IST)','Timings (IST)','Cohort','Region',
+                 'Name','Combined Calendar','Status'],
   },
-  online:{
-    label:'Online Events',cls:'online',
-    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
-    dateField:'Begin Date (DD/MM/YYYY)',titleField:'Name of the Event',
-    chipTags:['Program','Funnel'],
-    modalFields:['Funnel','Program','Name of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region/Country','Representative 1','Representative 2'],
+
+  /* 5. BOFU Offline Events – Takeovers
+     Columns: Date = col C (Date), Name of the event = col D
+     All-day events (no time). Calendar event: "<Name of the event>"
+     Chip tags: Region, Country                                    */
+  bofuOffline: {
+    label: 'BOFU Offline Events',
+    cls:   'offline',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=77530506&single=true&output=csv',
+    dateField:  'Date',
+    titleFn:    r => r['Name of the event'] || r['Name of the Event'] || 'BOFU Offline',
+    timeField:  null,
+    chipTags:   ['Region','Country'],
+    modalFields:['Date','Name of the event','City','Region','Country','Month'],
   },
-  offline:{
-    label:'Offline Events',cls:'offline',
-    url:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=77530506&single=true&output=csv',
-    dateField:'Begin Date (DD/MM/YYYY)',titleField:'Name of the Event',
-    chipTags:['Type of the Event','Country'],
-    modalFields:['Funnel','Name of the Event','Type of the Event','Begin Date (DD/MM/YYYY)','End Date (DD/MM/YYYY)','Start Time (IST HH:MM:SS)','End Time (IST HH:MM:SS)','Region','Country','City','Location','Representative 1','Representative 2'],
+
+  /* 6. MOFU Offline Events – B2B
+     Columns: Date (col A), Event Name (col B), Event Type (col C),
+              Location (col D), Region (col H)
+     Calendar event: "<Event Type> · <Location>"
+     Chip tags: Event Type, Region                                 */
+  mofuOffline: {
+    label: 'MOFU Offline Events',
+    cls:   'offline',
+    url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=96818292&single=true&output=csv',
+    dateField:  'Date',
+    titleFn:    r => [r['Event Type'], r['Location']].filter(Boolean).join(' · '),
+    timeField:  null,
+    chipTags:   ['Event Type','Region'],
+    modalFields:['Date','Event Name','Event Type','Location',
+                 'Team Members / Attendees','Visa Required','Event Status','Region'],
   },
+
 };
 
 /* ═══ STATE ═══ */
@@ -339,18 +406,22 @@ function setStatus(msg,cls){const el=document.getElementById('statusPill');el.te
 function explodeRow(k,row){
   const def=SHEETS[k];const evs=[];
   if(def.subEvents){
+    // Multi-date types (Term Durations): one row → many calendar events
     def.subEvents.forEach(sub=>{
       const d=parseDate(row[sub.field]);if(!d)return;
       const base=row[def.titleBase]||def.label;
-      const timeRaw=row['Start Time (IST HH:MM:SS)']||row['Timings (IST)']||null;
+      const timeRaw=def.timeField?row[def.timeField]:null;
       evs.push({k,parentCls:def.cls,cls:sub.cls,label:def.label,subLabel:sub.label,
         title:`${base} · ${sub.label}`,shortTitle:sub.label,date:d,row,timeRaw});
     });
   }else{
+    // Single-date types: one row → one calendar event
     const d=parseDate(row[def.dateField]);if(!d)return;
-    const timeRaw=row['Start Time (IST HH:MM:SS)']||row['Timings (IST)']||null;
+    // titleFn takes priority over titleField for computed titles
+    const titleStr=def.titleFn?def.titleFn(row):(row[def.titleField]||def.label);
+    const timeRaw=def.timeField?row[def.timeField]:null;
     evs.push({k,parentCls:def.cls,cls:def.cls,label:def.label,subLabel:null,
-      title:row[def.titleField]||def.label,shortTitle:row[def.titleField]||def.label,date:d,row,timeRaw});
+      title:titleStr,shortTitle:titleStr,date:d,row,timeRaw});
   }
   return evs;
 }
@@ -362,7 +433,7 @@ function allEvents(){
 function filteredEvents(){
   return allEvents().filter(e=>{
     if(fType&&e.k!==fType)return false;
-    if(fCohort&&(e.row['Cohort']||'')!==fCohort)return false;
+    if(fCohort&&(e.row['Cohort']||e.row['Round/ Cohort']||'')!==fCohort)return false;
     if(fRegion&&(e.row['Region/Country']||e.row['Region']||e.row['Country']||'')!==fRegion)return false;
     return true;
   });
@@ -371,7 +442,7 @@ function filteredEvents(){
 /* ═══ FILTERS ═══ */
 function populateFilters(){
   const rows=Object.values(store).flat();
-  const cohorts=[...new Set(rows.map(r=>r['Cohort']).filter(Boolean))].sort();
+  const cohorts=[...new Set(rows.map(r=>r['Cohort']||r['Round/ Cohort']||'').filter(Boolean))].sort();
   const regions=[...new Set(rows.map(r=>r['Region/Country']||r['Region']||r['Country']||'').filter(Boolean))].sort();
   function fill(id,arr,cur){const s=document.getElementById(id);s.innerHTML=s.options[0].outerHTML+arr.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');}
   fill('fCohort',cohorts,fCohort);fill('fRegion',regions,fRegion);

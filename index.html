@@ -429,6 +429,8 @@ function explodeRow(k,row){
   }else{
     // Single-date types: one row → one calendar event
     const d=parseDate(row[def.dateField]);if(!d)return;
+    // Skip bofuOnline rows with no Session Title
+    if(k==='bofuOnline'&&!row['Session Title'])return;
     // titleFn takes priority over titleField for computed titles
     const titleStr=def.titleFn?def.titleFn(row):(row[def.titleField]||def.label);
     const timeRaw=def.timeField?row[def.timeField]:null;

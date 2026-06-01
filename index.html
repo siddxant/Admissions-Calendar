@@ -299,10 +299,10 @@ const SHEETS = {
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
     // Actual headers: Date | Day | Time (GMT) | Time (IST) | Status | PG/UG | Batches | Category | Session Title | Main Speaker | Host
     dateField:  'Date',
-    titleFn:    r => [r['Session Title'], r['PG/UG'] ? '('+r['PG/UG']+')' : ''].filter(Boolean).join(' '),
+    titleFn:    r => [r['Session Title'], r['Program'] ? '('+r['Program']+')' : ''].filter(Boolean).join(' '),
     timeField:  'Time (IST)',
-    chipTags:   ['PG/UG','Category','Main Speaker'],
-    modalFields:['Date','Day','Time (GMT)','Time (IST)','Status','PG/UG',
+    chipTags:   ['Program','Category','Main Speaker'],
+    modalFields:['Date','Day','Time (GMT)','Time (IST)','Status','Program',
                  'Batches','Category','Session Title','Main Speaker','Host'],
   },
 
@@ -318,8 +318,8 @@ const SHEETS = {
     dateField:  'Date (IST)',
     titleFn:    r => r['Name'] || r['Session Title'] || 'MOFU Online',
     timeField:  'Timings (IST)',
-    chipTags:   ['Cohort','Region'],
-    modalFields:['Date (IST)','Timings (IST)','Cohort','Region',
+    chipTags:   ['Program','Region'],
+    modalFields:['Date (IST)','Timings (IST)','Program','Region',
                  'Name','Combined Calendar','Status'],
   },
 
@@ -445,7 +445,7 @@ function allEvents(){
 function filteredEvents(){
   return allEvents().filter(e=>{
     if(fType&&e.k!==fType)return false;
-    if(fCohort&&(e.row['Cohort']||e.row['Round/ Cohort']||'')!==fCohort)return false;
+    if(fCohort&&(e.row['Cohort']||e.row['Round/ Cohort']||e.row['Program']||'')!==fCohort)return false;
     if(fRegion&&(e.row['Region/Country']||e.row['Region']||e.row['Country']||'')!==fRegion)return false;
     return true;
   });
@@ -454,7 +454,7 @@ function filteredEvents(){
 /* ═══ FILTERS ═══ */
 function populateFilters(){
   const rows=Object.values(store).flat();
-  const cohorts=[...new Set(rows.map(r=>r['Cohort']||r['Round/ Cohort']||'').filter(Boolean))].sort();
+  const cohorts=[...new Set(rows.map(r=>r['Cohort']||r['Round/ Cohort']||r['Program']||'').filter(Boolean))].sort();
   const regions=[...new Set(rows.map(r=>r['Region/Country']||r['Region']||r['Country']||'').filter(Boolean))].sort();
   function fill(id,arr,cur){const s=document.getElementById(id);s.innerHTML=s.options[0].outerHTML+arr.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');}
   fill('fCohort',cohorts,fCohort);fill('fRegion',regions,fRegion);

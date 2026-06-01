@@ -262,7 +262,7 @@ const SHEETS = {
     dateField:  'Deadline',
     titleFn:    r => [r['Type'], r['Program']].filter(Boolean).join(' · '),
     timeField:  null,
-    chipTags:   ['Type', 'Program', 'Round/ Cohort'],
+    chipTags:   ['Round/ Cohort'],
     modalFields:['Program','Round/ Cohort','Deadline','Type'],
   },
 
@@ -279,7 +279,7 @@ const SHEETS = {
       {field:'Classes Start Date',     cls:'classes', label:'Classes Start'},
       {field:'Classes End Date',       cls:'classes', label:'Classes End'},
     ],
-    chipTags:   ['Program','Cohort','Country'],
+    chipTags:   ['Cohort','Country'],
     titleBase:  'Program',
     modalFields:['Program','Cohort','Term','Country',
                  'Check-In Start Date','Check-In End Date',
@@ -299,7 +299,7 @@ const SHEETS = {
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
     // Actual headers: Date | Day | Time (GMT) | Time (IST) | Status | PG/UG | Batches | Category | Session Title | Main Speaker | Host
     dateField:  'Date',
-    titleFn:    r => [r['Session Title'], r['Program'] ? '('+r['Program']+')' : ''].filter(Boolean).join(' '),
+    titleFn:    r => r['Session Title'] || 'BOFU Online',
     timeField:  'Time (IST)',
     chipTags:   ['Program','Category','Main Speaker'],
     modalFields:['Date','Day','Time (GMT)','Time (IST)','Status','Program',
@@ -335,7 +335,7 @@ const SHEETS = {
     dateField:  'Date',
     titleFn:    r => [r['Event Type'], r['City/Country']].filter(Boolean).join(' · '),
     timeField:  null,
-    chipTags:   ['Event Type','Region','City/Country'],
+    chipTags:   ['Region'],
     modalFields:['Event Type','City/Country','Date','Time','Region',
                  'Calling POC','Tetr POC','Student POC'],
   },
@@ -624,7 +624,7 @@ function renderList(){
 function showModal(encoded){
   const {k,row,subLabel}=JSON.parse(decodeURIComponent(encoded));
   const def=SHEETS[k];
-  const title=subLabel?`${row[def.titleBase||def.chipTags?.[0]]||def.label} · ${subLabel}`:row[def.titleField||def.chipTags?.[0]]||def.label;
+  const title=subLabel?`${row[def.titleBase||def.chipTags?.[0]]||def.label} · ${subLabel}`:(def.titleFn?def.titleFn(row):row[def.titleField||def.chipTags?.[0]])||def.label;
   const rows=def.modalFields.filter(f=>row[f]).map(f=>`<div class="mrow"><span class="mlabel">${f}</span><span>${row[f]}</span></div>`).join('');
   document.getElementById('modal').innerHTML=`<div class="modal-hd"><div><span class="badge ${def.cls}"><span class="bdot" style="background:var(--${def.cls}-c)"></span>${def.label}</span><div class="modal-title">${title}</div></div><button class="close-btn" onclick="closeModal()">✕</button></div>${rows}`;
   const ov=document.getElementById('overlay');ov.style.display='flex';requestAnimationFrame(()=>ov.classList.add('open'));

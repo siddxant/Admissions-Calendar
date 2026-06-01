@@ -288,12 +288,13 @@ const SHEETS = {
     label: 'BOFU Online Events',
     cls:   'online',
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=373760972&single=true&output=csv',
-    dateField:  'Date (IST)',
-    titleFn:    r => r['Session Title'] || r['Name of the Event'] || 'BOFU Online',
+    // Actual headers: Date | Day | Time (GMT) | Time (IST) | Status | PG/UG | Batches | Category | Session Title | Main Speaker | Host
+    dateField:  'Date',
+    titleFn:    r => [r['Session Title'], r['PG/UG'] ? '('+r['PG/UG']+')' : ''].filter(Boolean).join(' '),
     timeField:  'Time (IST)',
     chipTags:   ['PG/UG','Category','Main Speaker'],
-    modalFields:['Date (IST)','Time (IST)','PG/UG','Batches','Category',
-                 'Session Title','Main Speaker','Host','Status'],
+    modalFields:['Date','Day','Time (GMT)','Time (IST)','Status','PG/UG',
+                 'Batches','Category','Session Title','Main Speaker','Host'],
   },
 
   /* 4. MOFU Online Events

@@ -13,7 +13,6 @@
   --brand-yellow:  #F0C300;
   --brand-cyan:    #4CC9E9;
   --brand-purple:  #9C2AB5;
-
   --bg:   #0b0d0f;
   --s1:   #111318;
   --s2:   #181b22;
@@ -27,7 +26,6 @@
   --sans: 'IBM Plex Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', monospace;
   --rsm:4px; --rmd:8px; --rlg:14px;
-
   --fee-c:#F0C300;    --fee-bg:rgba(240,195,0,.11);    --fee-bdr:rgba(240,195,0,.3);
   --app-c:#F8769A;    --app-bg:rgba(248,118,154,.11);   --app-bdr:rgba(248,118,154,.3);
   --term-c:#4CC9E9;   --term-bg:rgba(76,201,233,.11);   --term-bdr:rgba(76,201,233,.3);
@@ -39,7 +37,6 @@
   --bofu_off-c:#fb923c; --bofu_off-bg:rgba(251,146,60,.12); --bofu_off-bdr:rgba(251,146,60,.28);
   /* MOFU Offline — teal */
   --mofu_off-c:#2dd4bf; --mofu_off-bg:rgba(45,212,191,.12); --mofu_off-bdr:rgba(45,212,191,.28);
-
   /* fee sub-shades */
   --fee1-c:#F0C300; --fee2-c:#d4a800; --fee3-c:#b88f00; --fee4-c:#9c7800; --feed-c:#e05a00;
   /* term sub-shades */
@@ -50,16 +47,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--s4);border-radius:3px}
-
 .app{max-width:1400px;margin:0 auto;padding:20px 18px}
-
 /* Topbar */
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .topbar h1{font-size:18px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
 .topbar h1 .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-green);flex-shrink:0}
 .topbar p{font-size:11.5px;color:var(--muted);margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--rmd);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--b2);background:var(--s2);color:var(--text);transition:all .15s;white-space:nowrap;font-family:var(--sans)}
 .btn:hover{background:var(--s3);border-color:var(--b3)}
@@ -68,19 +62,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14
 @keyframes spin{to{transform:rotate(360deg)}}
 .btn-today{border-color:rgba(0,156,80,.4);color:var(--brand-green)}
 .btn-today:hover{background:rgba(0,156,80,.08)}
-
 /* View toggle */
 .vtoggle{display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rmd);overflow:hidden}
 .vbtn{padding:7px 14px;font-size:12.5px;font-weight:500;color:var(--muted);background:none;border:none;border-right:1px solid var(--b1);cursor:pointer;transition:all .15s;font-family:var(--sans)}
 .vbtn:last-child{border-right:none}
 .vbtn.active{background:var(--s4);color:var(--text)}
-
 /* Stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-bottom:16px}
 .stat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:10px 12px}
 .stat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
 .stat-val{font-size:20px;font-weight:700;letter-spacing:-.5px}
-
 /* Filters */
 .filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 select.fsel{appearance:none;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rmd);color:var(--text);font-family:var(--sans);font-size:12.5px;padding:6px 26px 6px 10px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%235a6275' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .15s}
@@ -88,20 +79,17 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .status-pill{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--s1);border:1px solid var(--b1);border-radius:20px;padding:4px 10px;margin-left:auto}
 .status-pill.ok{color:var(--brand-green);border-color:rgba(0,156,80,.25)}
 .status-pill.err{color:var(--brand-pink);border-color:rgba(248,118,154,.25)}
-
 /* Legend */
 .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none;transition:opacity .15s}
 .leg.off{opacity:.22}
 .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
 /* Nav row */
 .nav-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .nav-row h2{font-size:16px;font-weight:600;letter-spacing:-.3px;min-width:200px}
 .nbtn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--s1);border:1px solid var(--b2);border-radius:var(--rsm);color:var(--text);cursor:pointer;transition:background .15s}
 .nbtn:hover{background:var(--s2)}
 .nbtn svg{width:12px;height:12px}
-
 /* ══ MONTHLY ══ */
 .cal-head-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:1px}
 .cal-head-row div{text-align:center;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 0 6px}
@@ -113,7 +101,6 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .mday.cur-day-sel{outline:2px solid var(--brand-green);outline-offset:-2px}
 .dnum{font-size:11px;font-weight:700;color:var(--muted);width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin-bottom:3px;font-variant-numeric:tabular-nums}
 .today .dnum{background:var(--brand-green);color:#fff}
-
 /* chips */
 .chip{display:block;font-size:9px;font-weight:600;padding:2px 4px;margin-bottom:2px;cursor:pointer;border-left:2px solid;border-radius:2px;transition:opacity .12s;line-height:1.4}
 .chip:hover{opacity:.68}
@@ -123,7 +110,6 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .chip-r2{display:flex;gap:2px;flex-wrap:wrap;margin-top:1px}
 .ctag{font-size:8px;font-weight:700;padding:0 3px;border-radius:2px;line-height:1.5;opacity:.9}
 .more-lbl{display:none}
-
 /* colour classes */
 .chip.fee,.tev.fee,.allday-chip.fee,.badge.fee,.ctag.fee          {background:var(--fee-bg);color:var(--fee-c);border-color:var(--fee-c)}
 .chip.fee1,.tev.fee1,.allday-chip.fee1,.badge.fee1,.ctag.fee1     {background:rgba(240,195,0,.1);color:var(--fee1-c);border-color:var(--fee1-c)}
@@ -141,7 +127,6 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .chip.mofu_on,.tev.mofu_on,.allday-chip.mofu_on,.badge.mofu_on,.ctag.mofu_on{background:var(--mofu_on-bg);color:var(--mofu_on-c);border-color:var(--mofu_on-c)}
 .chip.bofu_off,.tev.bofu_off,.allday-chip.bofu_off,.badge.bofu_off,.ctag.bofu_off{background:var(--bofu_off-bg);color:var(--bofu_off-c);border-color:var(--bofu_off-c)}
 .chip.mofu_off,.tev.mofu_off,.allday-chip.mofu_off,.badge.mofu_off,.ctag.mofu_off{background:var(--mofu_off-bg);color:var(--mofu_off-c);border-color:var(--mofu_off-c)}
-
 /* ══ TIME GRID (week + day) ══ */
 .tg-shell{border:1px solid var(--b1);border-radius:var(--rlg);overflow:hidden;background:var(--s1);display:flex;flex-direction:column}
 .allday-bar{display:flex;border-bottom:1px solid var(--b2);min-height:24px}
@@ -151,7 +136,6 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .allday-col:last-child{border-right:none}
 .allday-chip{display:block;font-size:9px;font-weight:700;padding:2px 5px;border-radius:2px;border-left:2px solid;margin-bottom:2px;cursor:pointer;white-space:normal;word-break:break-word;line-height:1.35}
 .allday-chip:hover{opacity:.7}
-
 .tg-body{display:flex;overflow-y:auto;height:calc(100vh - 300px);min-height:420px;align-items:flex-start}
 .tg-time-col{width:52px;flex-shrink:0;border-right:1px solid var(--b1);flex-shrink:0}
 .tg-time-cell{height:48px;display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 7px 0 0;font-family:var(--mono);font-size:9.5px;color:var(--muted);border-bottom:1px dashed var(--b1)}
@@ -163,13 +147,11 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .tg-half{position:absolute;top:50%;left:0;right:0;border-top:1px dashed rgba(255,255,255,.03)}
 .now-bar{position:absolute;left:0;right:0;height:2px;background:var(--brand-pink);z-index:10;pointer-events:none}
 .now-bar::before{content:'';position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--brand-pink)}
-
 .tev{position:absolute;left:2px;right:2px;border-radius:3px;padding:3px 5px;font-size:10px;font-weight:600;cursor:pointer;overflow:hidden;transition:opacity .12s;border-left:3px solid;z-index:2;min-height:18px}
 .tev:hover{opacity:.72;z-index:8}
 .tev-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .tev-time{font-size:8.5px;opacity:.7;font-family:var(--mono);margin-top:1px}
 .tev-ctags{display:flex;gap:2px;flex-wrap:wrap;margin-top:2px}
-
 /* day column headers */
 .tg-head{display:flex;border-bottom:1px solid var(--b2)}
 .tg-head-spacer{width:52px;flex-shrink:0;border-right:1px solid var(--b1)}
@@ -180,7 +162,6 @@ select.fsel:focus{outline:none;border-color:var(--b3)}
 .tg-day-name{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
 .tg-day-num{font-size:18px;font-weight:700;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;line-height:1;font-variant-numeric:tabular-nums}
 .is-today .tg-day-num{background:var(--brand-green);color:#fff}
-
 /* ══ LIST ══ */
 .list-scroll{overflow-x:auto}
 table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
@@ -193,7 +174,6 @@ table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;font-size:10.5px;font-weight:700}
 .bdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 .attr-tag{font-size:10.5px;padding:1px 6px;border-radius:3px;font-weight:600;display:inline-block}
-
 /* ══ MODAL ══ */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:all}
@@ -206,20 +186,17 @@ table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
 .mrow{display:grid;grid-template-columns:130px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1);font-size:12.5px;align-items:start}
 .mrow:last-child{border-bottom:none}
 .mlabel{color:var(--muted);font-size:11px;padding-top:2px;font-weight:500}
-
 /* ══ FOOTER ══ */
 .lu-bar{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rmd);padding:9px 13px;margin-top:22px;font-size:11.5px;color:var(--muted);flex-wrap:wrap;gap:7px}
 .lu-bar strong{color:var(--text);font-weight:500}
 .src-links{display:flex;gap:10px;flex-wrap:wrap}
 .src-link{font-size:11px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:3px;transition:color .15s}
 .src-link:hover{color:var(--text)}
-
 /* Toast */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--s4);border:1px solid var(--b2);border-radius:var(--rmd);padding:8px 14px;font-size:12.5px;font-weight:500;z-index:9998;transform:translateY(52px);opacity:0;transition:all .22s;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.ok{border-color:rgba(0,156,80,.35);color:var(--brand-green)}
 .toast.err{border-color:rgba(248,118,154,.35);color:var(--brand-pink)}
-
 @media(max-width:700px){
   .app{padding:10px 8px}
   .mday{min-height:56px;padding:3px 2px}
@@ -233,28 +210,9 @@ table.ltbl{width:100%;border-collapse:collapse;min-width:640px}
 </head>
 <body>
 <div class="app">
-
 <script>
-/* ═══ SHEET CONFIG ═══
-   ─────────────────────────────────────────────────────────────────
-   Each entry is one event type. Fields:
-     url         – published CSV link
-     cls         – colour class (fee | app | term | online | offline
-                   | online2 | offline2)
-     dateField   – column that holds the primary calendar date
-     titleFn(row)– function returning the chip title string
-     timeField   – column for IST time (optional; null = all-day)
-     chipTags    – array of column names shown as attribute tags
-     modalFields – all columns shown in the detail modal
-     subEvents   – for types that explode one row → many dated events
-   ─────────────────────────────────────────────────────────────────
-*/
+/* ═══ SHEET CONFIG ═══ */
 const SHEETS = {
-
-  /* 1. Student Deadlines
-     Columns: Program | Round/Cohort | Deadline | Type
-     Calendar event: "<Type> · <Program>" on the Deadline date
-     Chip tags: Type, Program, Round/Cohort                        */
   studentDeadlines: {
     label: 'Student Deadlines',
     cls:   'app',
@@ -265,8 +223,6 @@ const SHEETS = {
     chipTags:   ['Round/ Cohort'],
     modalFields:['Program','Round/ Cohort','Deadline','Type'],
   },
-
-  /* 2. Term Durations — unchanged, explodes into 6 sub-events     */
   term: {
     label: 'Term Durations',
     cls:   'term',
@@ -286,13 +242,6 @@ const SHEETS = {
                  'Orientation Start Date','Orientation End Date',
                  'Classes Start Date','Classes End Date'],
   },
-
-  /* 3. BOFU Online Events – Term Zero
-     Columns: Date(col D/IST), Time IST (col E), Status, PG/UG (col F),
-              Batches, Category, Session Title (col H), Main Speaker, Host
-     Calendar event: "<Session Title>" on Date (IST)
-     Chip tags: PG/UG, Category, Main Speaker
-     Time field: "Time (IST)"                                      */
   bofuOnline: {
     label: 'BOFU Online Events',
     cls:   'online',
@@ -305,12 +254,6 @@ const SHEETS = {
     modalFields:['Date','Day','Time (GMT)','Time (IST)','Status','Program',
                  'Batches','Category','Session Title','Main Speaker','Host'],
   },
-
-  /* 4. MOFU Online Events
-     Columns incl: Date (IST) = col G, Timings (IST) = col F, Name = col M
-     Calendar event: "<Name>" (col M) on Date IST (col G)
-     Chip tags: Cohort, Region
-     Time field: Timings (IST)                                     */
   mofuOnline: {
     label: 'MOFU Online Events',
     cls:   'mofu_on',
@@ -322,11 +265,6 @@ const SHEETS = {
     modalFields:['Date (IST)','Timings (IST)','Program','Region',
                  'Name','Combined Calendar','Status'],
   },
-
-  /* 5. BOFU Offline Events – Takeovers
-     Columns: Date = col C (Date), Name of the event = col D
-     All-day events (no time). Calendar event: "<Name of the event>"
-     Chip tags: Region, Country                                    */
   bofuOffline: {
     label: 'BOFU Offline Events',
     cls:   'bofu_off',
@@ -339,26 +277,25 @@ const SHEETS = {
     modalFields:['Event Type','City/Country','Date','Time','Region',
                  'Calling POC','Tetr POC','Student POC'],
   },
-
   /* 6. MOFU Offline Events – B2B
-     Columns: Date (col A), Event Name (col B), Event Type (col C),
-              Location (col D), Region (col H)
-     Calendar event: "<Event Type> · <Location>"
-     Chip tags: Event Type, Region                                 */
+     Columns: Start Date | End Date | Event Name | Event Type | Location |
+              Team Members Attending | Visa Required | Event Status | Region
+     Events span Start Date → End Date (single day if End Date is empty).
+     Title = Event Name. Chip tags: Event Type, Location, Region.
+     All other fields shown in modal on click.                      */
   mofuOffline: {
     label: 'MOFU Offline Events',
     cls:   'mofu_off',
     url:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNcSIthaMwxLqbIsFVN86EI6aaIF9CN2wVUgeSDA97u1zQ7vgnozcV8qaNJeQvJTMfWdnf4_p1rKS3/pub?gid=96818292&single=true&output=csv',
-    dateField:  'Date',
-    titleFn:    r => [r['Event Type'], r['Location']].filter(Boolean).join(' · '),
+    startDateField: 'Start Date',
+    endDateField:   'End Date',
+    titleFn:    r => r['Event Name'] || 'MOFU Offline',
     timeField:  null,
-    chipTags:   ['Event Type','Region'],
-    modalFields:['Date','Event Name','Event Type','Location',
-                 'Team Members / Attendees','Visa Required','Event Status','Region'],
+    chipTags:   ['Event Type','Location','Region'],
+    modalFields:['Start Date','End Date','Event Name','Event Type','Location',
+                 'Team Members Attending','Visa Required','Event Status','Region'],
   },
-
 };
-
 /* ═══ STATE ═══ */
 let store={};let hidden=new Set();
 let curYear=new Date().getFullYear(),curMonth=new Date().getMonth(),curDay=new Date().getDate();
@@ -366,7 +303,6 @@ let calView='month';
 let fType='',fCohort='',fRegion='';
 let loadState={};
 const HOUR_PX=48;
-
 /* ═══ DATE UTILS ═══ */
 function parseDate(r){
   if(!r)return null;const s=r.toString().trim().replace(/\s/g,'');
@@ -379,7 +315,6 @@ function parseTime(r){if(!r)return null;const m=r.toString().match(/(\d{1,2}):(\
 function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
 function fmt(d,o){if(!d)return'—';return d.toLocaleDateString('en-GB',o||{day:'2-digit',month:'short',year:'numeric'});}
 function dayAbbr(d){return d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase();}
-
 /* ═══ CSV ═══ */
 function csvToObjs(text){
   const lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
@@ -389,7 +324,6 @@ function csvToObjs(text){
   const h=rows[0].map(x=>x.trim());
   return rows.slice(1).map(r=>{const o={};h.forEach((k,i)=>{o[k]=(r[i]||'').trim();});return o;}).filter(o=>Object.values(o).some(v=>v));
 }
-
 /* ═══ FETCH ═══ */
 async function fetchSheet(k){
   try{
@@ -413,7 +347,6 @@ async function loadAll(){
   btn.classList.remove('spinning');
 }
 function setStatus(msg,cls){const el=document.getElementById('statusPill');el.textContent=msg;el.className='status-pill'+(cls?' '+cls:'');}
-
 /* ═══ EXPLODE ROWS ═══ */
 function explodeRow(k,row){
   const def=SHEETS[k];const evs=[];
@@ -426,12 +359,29 @@ function explodeRow(k,row){
       evs.push({k,parentCls:def.cls,cls:sub.cls,label:def.label,subLabel:sub.label,
         title:`${base} · ${sub.label}`,shortTitle:sub.label,date:d,row,timeRaw});
     });
+  }else if(def.startDateField){
+    // Date-range types (e.g. MOFU Offline): one row → one event per day in range
+    const start=parseDate(row[def.startDateField]);if(!start)return evs;
+    const endRaw=def.endDateField?row[def.endDateField]:'';
+    const end=endRaw?parseDate(endRaw):null;
+    const last=end||start;
+    const title=def.titleFn?def.titleFn(row):(row[def.titleField]||def.label);
+    const timeRaw=def.timeField?row[def.timeField]:null;
+    const isMultiDay=!sameDay(start,last);
+    const cur=new Date(start);
+    while(cur<=last){
+      evs.push({k,parentCls:def.cls,cls:def.cls,label:def.label,subLabel:null,
+        title,shortTitle:title,date:new Date(cur),row,timeRaw,
+        isMultiDay,
+        isFirstDay:sameDay(cur,start),
+        isLastDay:sameDay(cur,last)});
+      cur.setDate(cur.getDate()+1);
+    }
   }else{
     // Single-date types: one row → one calendar event
     const d=parseDate(row[def.dateField]);if(!d)return;
     // Skip bofuOnline rows with no Session Title
     if(k==='bofuOnline'&&!row['Session Title'])return;
-    // titleFn takes priority over titleField for computed titles
     const titleStr=def.titleFn?def.titleFn(row):(row[def.titleField]||def.label);
     const timeRaw=def.timeField?row[def.timeField]:null;
     evs.push({k,parentCls:def.cls,cls:def.cls,label:def.label,subLabel:null,
@@ -452,7 +402,6 @@ function filteredEvents(){
     return true;
   });
 }
-
 /* ═══ FILTERS ═══ */
 function populateFilters(){
   const rows=Object.values(store).flat();
@@ -461,7 +410,6 @@ function populateFilters(){
   function fill(id,arr,cur){const s=document.getElementById(id);s.innerHTML=s.options[0].outerHTML+arr.map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');}
   fill('fCohort',cohorts,fCohort);fill('fRegion',regions,fRegion);
 }
-
 /* ═══ STATS ═══ */
 function renderStats(){
   const tot=Object.values(store).reduce((s,a)=>s+a.length,0);
@@ -470,23 +418,27 @@ function renderStats(){
     ...Object.keys(SHEETS).map(k=>({lbl:SHEETS[k].label,val:(store[k]||[]).length,c:`var(--${SHEETS[k].cls}-c)`}))
   ].map(s=>`<div class="stat"><div class="stat-lbl">${s.lbl}</div><div class="stat-val" style="color:${s.c||'var(--text)'}">${s.val}</div></div>`).join('');
 }
-
 /* ═══ LEGEND ═══ */
 function renderLegend(){
   const html=Object.keys(SHEETS).map(k=>`<div class="leg${hidden.has(k)?' off':''}" onclick="toggleHide('${k}')"><div class="leg-dot" style="background:var(--${SHEETS[k].cls}-c)"></div>${SHEETS[k].label}</div>`).join('');
   document.querySelectorAll('.legend').forEach(el=>el.innerHTML=html);
 }
 function toggleHide(k){hidden.has(k)?hidden.delete(k):hidden.add(k);renderLegend();renderView();}
-
 /* ═══ CHIP ═══ */
 function chipHtml(ev){
   const def=SHEETS[ev.k];
   const tags=(def.chipTags||[]).map(f=>ev.row[f]).filter(Boolean).map(v=>`<span class="ctag ${ev.cls}">${v}</span>`).join('');
+  // Multi-day indicator: show ← or → arrows on continuation/end days
+  let spanMark='';
+  if(ev.isMultiDay){
+    if(ev.isFirstDay)spanMark='<span style="opacity:.5;margin-left:2px">→</span>';
+    else if(ev.isLastDay)spanMark='<span style="opacity:.5;margin-right:2px">←</span>';
+    else spanMark='<span style="opacity:.4">↔</span>';
+  }
   const data=eData(ev);
-  return `<span class="chip ${ev.cls}" onclick="showModal('${data}')" title="${ev.title}"><div class="chip-inner"><span class="chip-name">${ev.shortTitle}</span>${tags}</div></span>`;
+  return `<span class="chip ${ev.cls}" onclick="showModal('${data}')" title="${ev.title}"><div class="chip-inner">${spanMark}<span class="chip-name">${ev.shortTitle}</span>${tags}</div></span>`;
 }
 function eData(ev){return encodeURIComponent(JSON.stringify({k:ev.k,row:ev.row,subLabel:ev.subLabel}));}
-
 /* ═══ MONTHLY ═══ */
 function renderMonthly(){
   const d1=new Date(curYear,curMonth,1);
@@ -508,22 +460,16 @@ function renderMonthly(){
     </div>`;
   }).join('');
 }
-function dayClick(y,m,d){/* clicking a date in month view does nothing extra */}
-
 /* ═══ TIME GRID ═══ */
 function buildTimeGrid(days){
   const tod=new Date();
   const evts=filteredEvents().filter(e=>e.date);
   const evMap={};evts.forEach(e=>{const k=dayKey(e.date);(evMap[k]=evMap[k]||[]).push(e);});
   function dayKey(d){return`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;}
-
-  /* header */
   const headDays=days.map(d=>{
     const it=sameDay(d,tod);
     return `<div class="tg-day-hd${it?' is-today':''}"><span class="tg-day-name">${dayAbbr(d)}</span><span class="tg-day-num">${d.getDate()}</span></div>`;
   }).join('');
-
-  /* all-day bar */
   const adCols=days.map(d=>{
     const evs=(evMap[dayKey(d)]||[]).filter(e=>!parseTime(e.timeRaw));
     return`<div class="allday-col">${evs.map(e=>{
@@ -531,14 +477,11 @@ function buildTimeGrid(days){
       return`<span class="allday-chip ${e.cls}" onclick="showModal('${data}')" title="${e.title}">${e.shortTitle}</span>`;
     }).join('')}</div>`;
   }).join('');
-
-  /* body cols */
   const hours=Array.from({length:24},(_,i)=>i);
   const bodyCols=days.map(d=>{
     const it=sameDay(d,tod);
     const tevs=(evMap[dayKey(d)]||[]).filter(e=>parseTime(e.timeRaw));
     const hourRows=hours.map(h=>`<div class="tg-hour"><div class="tg-half"></div></div>`).join('');
-    // group by hour to offset overlaps
     const byHour={};tevs.forEach(e=>{const t=parseTime(e.timeRaw);const hk=t.h;(byHour[hk]=byHour[hk]||[]).push(e);});
     const tevHtml=tevs.map(e=>{
       const t=parseTime(e.timeRaw);
@@ -557,9 +500,7 @@ function buildTimeGrid(days){
     const nowH=it?`<div class="now-bar" id="nowBar" style="top:${(tod.getHours()*60+tod.getMinutes())/60*HOUR_PX}px"></div>`:'';
     return`<div class="tg-day-col${it?' is-today':''}" style="height:${24*HOUR_PX}px">${hourRows}${tevHtml}${nowH}</div>`;
   }).join('');
-
   const timeLbls=hours.map(h=>`<div class="tg-time-cell">${h===0?'':h<12?h+'am':h===12?'12pm':(h-12)+'pm'}</div>`).join('');
-
   return`<div class="tg-shell">
     <div class="tg-head"><div class="tg-head-spacer"></div><div class="tg-head-days">${headDays}</div></div>
     <div class="allday-bar"><div class="allday-lbl">ALL DAY</div><div class="allday-cols">${adCols}</div></div>
@@ -569,9 +510,7 @@ function buildTimeGrid(days){
     </div>
   </div>`;
 }
-
 function scrollToNow(){requestAnimationFrame(()=>{const b=document.getElementById('tgBody');if(b)b.scrollTop=Math.max(0,(new Date().getHours()-1)*HOUR_PX);});}
-
 /* ═══ WEEK ═══ */
 function renderWeek(){
   const d=new Date(curYear,curMonth,curDay);
@@ -583,7 +522,6 @@ function renderWeek(){
   scrollToNow();
   startNowTick();
 }
-
 /* ═══ DAY ═══ */
 function renderDay(){
   const d=new Date(curYear,curMonth,curDay);
@@ -592,7 +530,6 @@ function renderDay(){
   scrollToNow();
   startNowTick();
 }
-
 let nowTickStarted=false;
 function startNowTick(){
   if(nowTickStarted)return;nowTickStarted=true;
@@ -601,18 +538,31 @@ function startNowTick(){
     if(nb){const n=new Date();nb.style.top=(n.getHours()*60+n.getMinutes())/60*HOUR_PX+'px';}
   },60000);
 }
-
 /* ═══ LIST ═══ */
 function renderList(){
-  const evts=filteredEvents().slice().sort((a,b)=>(!a.date?1:!b.date?-1:a.date-b.date));
+  // For list view, deduplicate multi-day events — show only the first occurrence
+  const seen=new Set();
+  const evts=filteredEvents().filter(e=>{
+    if(!e.date)return false;
+    if(e.isMultiDay){
+      const key=`${e.k}-${JSON.stringify(e.row)}`;
+      if(seen.has(key))return false;
+      seen.add(key);
+    }
+    return true;
+  }).sort((a,b)=>(!a.date?1:!b.date?-1:a.date-b.date));
   if(!evts.length){document.getElementById('listBody').innerHTML='<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--muted)">No events found.</td></tr>';return;}
   document.getElementById('listBody').innerHTML=evts.map(ev=>{
     const def=SHEETS[ev.k];
     const tags=(def.chipTags||[]).map(f=>ev.row[f]).filter(Boolean).map(v=>`<span class="attr-tag ${ev.cls}">${v}</span>`).join(' ');
     const data=eData(ev);
     const region=ev.row['Region/Country']||ev.row['Region']||ev.row['Country']||'—';
+    // For date-range events show "Start → End" in the date column
+    const endRaw=def.endDateField?ev.row[def.endDateField]:'';
+    const endDate=endRaw?parseDate(endRaw):null;
+    const dateStr=ev.isMultiDay&&endDate?`${fmt(parseDate(ev.row[def.startDateField]))} → ${fmt(endDate)}`:fmt(ev.date);
     return`<tr onclick="showModal('${data}')">
-      <td class="dmono">${fmt(ev.date)}</td>
+      <td class="dmono">${dateStr}</td>
       <td><span class="badge ${ev.cls}"><span class="bdot" style="background:var(--${ev.cls}-c)"></span>${ev.label}${ev.subLabel?` · ${ev.subLabel}`:''}</span></td>
       <td>${ev.title}</td>
       <td>${tags||'—'}</td>
@@ -621,7 +571,6 @@ function renderList(){
     </tr>`;
   }).join('');
 }
-
 /* ═══ MODAL ═══ */
 function showModal(encoded){
   const {k,row,subLabel}=JSON.parse(decodeURIComponent(encoded));
@@ -633,7 +582,6 @@ function showModal(encoded){
 }
 function closeModal(){const ov=document.getElementById('overlay');ov.classList.remove('open');setTimeout(()=>{ov.style.display='none';},200);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-
 /* ═══ VIEW SWITCH ═══ */
 function switchView(v){
   calView=v;
@@ -649,7 +597,6 @@ function renderView(){
   else if(calView==='day')renderDay();
   else renderList();
 }
-
 /* ═══ NAVIGATION ═══ */
 function navPrev(){
   if(calView==='month'){curMonth--;if(curMonth<0){curMonth=11;curYear--;}}
@@ -665,11 +612,9 @@ function navNext(){
 }
 function goToday(){const t=new Date();curYear=t.getFullYear();curMonth=t.getMonth();curDay=t.getDate();renderView();}
 function renderAll(){renderStats();renderLegend();renderView();}
-
 /* ─── Boot ─── */
 Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
 </script>
-
 <!-- HTML -->
 <div class="topbar">
   <div>
@@ -691,9 +636,7 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
     </button>
   </div>
 </div>
-
 <div class="stats" id="statsBar"></div>
-
 <div class="filters">
   <select class="fsel" id="fType" onchange="fType=this.value;renderView()">
     <option value="">All event types</option>
@@ -702,7 +645,6 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
   <select class="fsel" id="fCohort" onchange="fCohort=this.value;renderView()"><option value="">All cohorts</option></select>
   <select class="fsel" id="fRegion" onchange="fRegion=this.value;renderView()"><option value="">All regions</option></select>
 </div>
-
 <!-- MONTH -->
 <div id="monthView">
   <div class="nav-row">
@@ -714,7 +656,6 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
   <div class="cal-head-row"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
   <div class="cal-grid" id="calGrid"></div>
 </div>
-
 <!-- WEEK -->
 <div id="weekView" style="display:none">
   <div class="nav-row">
@@ -725,7 +666,6 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
   <div class="legend"></div>
   <div id="weekGrid"></div>
 </div>
-
 <!-- DAY -->
 <div id="dayView" style="display:none">
   <div class="nav-row">
@@ -736,7 +676,6 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
   <div class="legend"></div>
   <div id="dayGrid"></div>
 </div>
-
 <!-- LIST -->
 <div id="listView" style="display:none">
   <div class="list-scroll">
@@ -746,17 +685,14 @@ Object.keys(SHEETS).forEach(k=>{store[k]=[];loadState[k]='loading';});
     </table>
   </div>
 </div>
-
 <div class="lu-bar">
   <span>Last refreshed: <strong id="luTime">—</strong></span>
   <div class="src-links">
     <script>document.write(Object.keys(SHEETS).map(k=>`<a class="src-link" href="${SHEETS[k].url}" target="_blank"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>${SHEETS[k].label}</a>`).join(''));</script>
   </div>
 </div>
-
 <div class="overlay" id="overlay" style="display:none" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"></div>
-
 <script>
 renderAll();
 loadAll();
